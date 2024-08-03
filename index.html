@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La Casa de Espeso</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        
+        <a href="index.html"><img src="img/logo.jpg" class="logo"></a>
+        <div class="nav">
+            <a href="#reservation">RESERVATION</a>
+            <a href="#location">LOCATION</a>
+            <a href="#gallery">GALLERY</a>
+            <a href="#comments">COMMENTS</a>
+            <a href="#contact">CONTACT</a>
+            <a href="#aboutus">ABOUT US</a>
+        </div>
+
+    </header>
+
+    <div class="container" id="reservation">
+        <div class="info">
+            <h1>RESERVATION</h1>
+            LAST NAME: <input type="text">
+            FIRST NAME: <input type="text"><br>
+            PHONE NUMBER: <input type="text"><br>
+            EMAIL ADDRESS: <input type="email"><br>
+            <hr>
+            DATE: <input type="date" id="date" min="" required>
+            STARTING TIME: <input type="time" id="time">
+            <form action="/submit" method="post">
+                ROOM TYPE:
+                <select id="dropdown0" name="dropdown">
+                    <option value="option1" selected>AIRCON ROOM</option>
+                    <option value="option2">NON-AIRCON ROOM</option>
+                </select>
+            </form>
+            <form action="/submit" method="post">
+                DURATION:
+                <select id="dropdown1" name="dropdown">
+                    <option value="option1" selected>3 HOURS</option>
+                    <option value="option2">6 HOURS</option>
+                    <option value="option3">12 HOURS</option>
+                    <option value="option4">24 HOURS</option>
+                </select>
+            </form>
+            <form action="/submit" method="post">
+                EXTENSION:
+                <select id="dropdown2" name="dropdown">
+                    <option value="option1" selected>NONE</option>
+                    <option value="option2">1 HOUR</option>
+                    <option value="option3">2 HOURS</option>
+                    <option value="option4">3 HOURS</option>
+                </select>
+            </form>
+            <input type = "checkbox" class="checkbox"> I agree to the <a class="tac">terms and condition</a> by checking this and confirming my reservation.
+            <div id="terms-popup" class="popup">
+                <div class="popup-content">
+                    <span class="close-btn">&times;</span>
+                    <h2>Terms and Conditions</h2>
+                    <p><ul>
+                        <li>This is only a reservation, you will not be paying through this reservation process but you will pay once you are in the receptionist and you must inform about your reservation.</li>
+                        <li>Walk-ins are more prioritized than reservation.</li>
+                        <li>Arriving 5 minutes before the selected time is a must.</li>
+                        <li>If you arrived exactly 10 minutes into your selected time in, your reservation is INVALID</li>
+                    </ul></p>
+                    
+                </div>
+            </div>
+            <button class="confirm">Confirm</button>
+        </div>
+
+        <div class="backgroundphoto">
+            <img src="img/bg01.jpg">
+        </div>
+    </div>
+    <div class="container2" id="location">
+        <div class="content">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3868.6909372315067!2d122.8417312749277!3d14.154258986280912!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3398a518df22413b%3A0x8daeb9a8eecd30e5!2sLa%20Casa%20de%20Espeso!5e0!3m2!1sen!2sph!4v1722666003034!5m2!1sen!2sph" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+        <div class="content">
+            <h1>Embrace the charm of La Casa De Espeso, <br>your perfect getaway.</h1>
+            <p>La Casa De Espeso is a transient house that offers comfortable accommodations with a cozy and inviting atmosphere. The hotel is known for its warm hospitality, making guests feel at home with personalized service. Located in a convenient area, it provides easy access to local attractions and amenities. La Casa De Espeso aims to provide a memorable stay with well-appointed rooms, modern amenities, and a welcoming environment for both leisure and business travelers.</p>
+        </div>
+    </div>
+
+    <div class="container3" id="gallery">
+        <div class="container3-content">
+            <h1>#LaCasaDeEspeso</h1>
+            <p>Discover the charm of La Casa de Espeso through our gallery showcase. Each image highlights the hotel's elegant interiors, serene outdoor spaces, and luxurious amenities, capturing the essence of a tranquil retreat.</p>
+            <div class="gallery">
+                <div class="gallery-item">
+                    <img src="img/bg01B.jpg">
+                </div>
+                <div class="gallery-item">
+                    <img src="img/bg02.jpg">
+                </div>
+                <div class="gallery-item">
+                    <img src="img/bg03.jpg">
+                </div>
+                <div class="gallery-item">
+                    <img src="img/bg04.jpg">
+                </div>
+                <div class="gallery-item">
+                    <img src="img/bg05.jpg">
+                </div>
+                <div class="gallery-item">
+                    <img src="img/bg06.jpg">
+                </div>
+                <div class="gallery-item">
+                    <img src="img/bg07.jpg">
+                </div>
+                <div class="gallery-item large">
+                    <img src="img/bg08.jpg">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container4" id="comments">
+        <div class="comment-box">
+            <h2>Leave a Comment</h2>
+            <div class="input-group">
+                Name: <input type="text" id="nameInput">
+                Time and date of visit: <input type="datetime-local" id="dateTimeInput">
+                Proof of visit: <input type="file" id="fileInput">
+                Comment / rating: <textarea id="commentInput" rows="4"></textarea>
+            </div>
+            <button onclick="addComment()">Submit</button>
+        </div>
+        
+        <div class="comments-list" id="commentsList">
+            <h3>Comments</h3>
+        </div>
+    </div>
+    
+    <div class="container5" id="contact">
+        <hr>
+        <h3>Contact info</h3>
+        <ul>
+            <a href="https://maps.app.goo.gl/AHUu62ghPErESMya8" target="_blank"><li><img src="img/location.png" class="contactinfo">Spanish Road, Purok IV, Brgy. Malasugui, Labo, Camarines Norte, Philippines</li></a>
+            <li><img src="img/phone.png" class="contactinfo">0935 896 8651</li>
+            <a href="https://www.facebook.com/LaCasaDeEspeso" target="_blank"><li><img src="img/facebook.png" class="contactinfo">Facebook Page - La Casa De Espeso</li></a>
+        </ul>
+    </div>
+
+    <div class="container6" id="aboutus">
+        <div class="container6-content"></div>
+        <div class="container6-content3">
+            <h1>About La Casa De Espeso</h1>
+            <p>
+                Welcome to La Casa de Espeso, your serene retreat in the heart of Labo, Camarines Norte. Our charming hotel, with its distinctive turquoise facade, offers a welcoming atmosphere for both leisure and business travelers.
+
+                We pride ourselves on exceptional hospitality, tight security and personalized service. Our spacious rooms feature cozy bedding, adequate bathing area and relaxing view. La Casa de Espeso is the perfect base for exploring Camarines Norte. Our concierge team is ready to ensure your stay is seamless and enjoyable.
+                
+                Experience comfort, luxury, and convenience at La Casa de Espeso. We look forward to welcoming you!
+            </p>
+            <hr>
+            <h1>Staffs and Officers</h1>
+            <div class="container6-content1">
+                <div class="container6-content2">
+                    <img src="img/user.png" class="staffphoto"><h3>NAME</h3><p>ROLE</p>
+                </div>
+                <div class="container6-content2">
+                    <img src="img/user.png" class="staffphoto"><h3>NAME</h3><p>ROLE</p>
+                </div>
+                <div class="container6-content2">
+                    <img src="img/user.png" class="staffphoto"><h3>NAME</h3><p>ROLE</p>
+                </div>   
+            </div>
+            <div class="container6-content1">
+                <div class="container6-content2">
+                    <img src="img/user.png" class="staffphoto"><h3>NAME</h3><p>ROLE</p>
+                </div>
+                <div class="container6-content2">
+                    <img src="img/user.png" class="staffphoto"><h3>NAME</h3><p>ROLE</p>
+                </div>
+                <div class="container6-content2">
+                    <img src="img/user.png" class="staffphoto"><h3>NAME</h3><p>ROLE</p>
+                </div>   
+                <div class="container6-content2">
+                    <img src="img/user.png" class="staffphoto"><h3>NAME</h3><p>ROLE</p>
+                </div>  
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        &copy;2024 CHRISTIAN LUIS ACERON
+    </footer>
+    
+    <script src="script.js">
+        // scripts.js
+        
+        
+    </script>
+        
+
+</body>
+</html>
