@@ -46,7 +46,7 @@ header a {
 .info {
     background-color: lightgreen;
     width: 50%;
-    height: 115vh;
+    height: auto;
     padding-left: 70px;
     padding-right: 70px;
     color: black;
@@ -151,6 +151,7 @@ input {
     width: 200px;
     border-radius: 30px;
     margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 .confirm:hover {
@@ -169,7 +170,7 @@ input {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 115vh;
+    height: auto;
     opacity: 0; /* Initially hidden */
     transform: translateY(100px); /* Initially positioned below */
     transition: all 0.9s ease-out;
@@ -199,6 +200,7 @@ a:hover {
     display: flex;
 }
 .content {
+    padding: 30px;
     padding-top: 100px;
     padding-bottom: 100px;
     display: flex;
