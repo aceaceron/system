@@ -12,7 +12,7 @@ const observerOptions = { threshold: 0.1 };
 const observer = new IntersectionObserver(handleIntersection, observerOptions);
 
 document.addEventListener('DOMContentLoaded', () => {
-    const elements = document.querySelectorAll('.info, .backgroundphoto, .content, .container3-content, .comment-box, .comments-list, .container5, .container6');
+    const elements = document.querySelectorAll('.info, .backgroundphoto, .content, .container3-content, .comment-box, .comments-list, .container3 .container3-content .gallery-item img, .container5, .container6');
     elements.forEach(element => observer.observe(element));
 
     // Smooth scrolling for anchor links
@@ -27,11 +27,23 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Set min date for date input
-    const today = new Date().toISOString().split('T')[0];
-    document.getElementById('date').setAttribute('min', today);
+    
 });
+var today = new Date();
 
+        // Calculate tomorrow's date
+        var tomorrow = new Date(today);
+        tomorrow.setDate(today.getDate() + 1);
+
+        // Format tomorrow's date as yyyy-mm-dd
+        var dd = String(tomorrow.getDate()).padStart(2, '0');
+        var mm = String(tomorrow.getMonth() + 1).padStart(2, '0'); // January is 0!
+        var yyyy = tomorrow.getFullYear();
+
+        var tomorrowFormatted = yyyy + '-' + mm + '-' + dd;
+
+        // Set the min attribute of the date input to tomorrow's date
+        document.getElementById('date').setAttribute('min', tomorrowFormatted);
 // Section 2: Comment Handling
 function addComment() {
     const nameInput = document.getElementById('nameInput');
@@ -88,6 +100,8 @@ function addComment() {
     }
 }
 
+
+
 // Section 3: Terms and Conditions Popup
 const popup = document.getElementById('terms-popup');
 const tac = document.querySelector('.tac');
@@ -106,4 +120,96 @@ window.addEventListener('click', (event) => {
     if (event.target === popup) {
         popup.style.display = 'none';
     }
+});
+
+// Section 4: Event Rental Reservation Popup
+const popup2 = document.getElementById('event-popup');
+const eventtac = document.querySelector('.eventtac');
+const closeBtn2 = document.querySelector('.close-btn2');
+
+eventtac.addEventListener('click', (event) => {
+    event.preventDefault(); // Prevent the default anchor behavior
+    popup2.style.display = 'block';
+});
+
+closeBtn2.addEventListener('click', () => {
+    popup2.style.display = 'none';
+});
+
+window.addEventListener('click', (event) => {
+    if (event.target === popup) {
+        popup2.style.display = 'none';
+    }
+});
+
+document.querySelector('.confirm').addEventListener('click', function(event) {
+    event.preventDefault();
+
+    const lastName = document.getElementById('lastName');
+    const firstName = document.getElementById('firstName');
+    const phoneNumber = document.getElementById('phoneNumber');
+    const emailAddress = document.getElementById('emailAddress');
+    const date = document.getElementById('date');
+    const termsCheckbox = document.getElementById('termsCheckbox');
+
+    let valid = true;
+
+    if (lastName.value.trim() === "") {
+        lastName.classList.add('error');
+        valid = false;
+    } else {
+        lastName.classList.remove('error');
+    }
+
+    if (firstName.value.trim() === "") {
+        firstName.classList.add('error');
+        valid = false;
+    } else {
+        firstName.classList.remove('error');
+    }
+
+    if (phoneNumber.value.trim() === "") {
+        phoneNumber.classList.add('error');
+        valid = false;
+    } else {
+        phoneNumber.classList.remove('error');
+    }
+
+    if (emailAddress.value.trim() === "" || !emailAddress.checkValidity()) {
+        emailAddress.classList.add('error');
+        valid = false;
+    } else {
+        emailAddress.classList.remove('error');
+    }
+
+    if (date.value.trim() === "") {
+        date.classList.add('error');
+        valid = false;
+    } else {
+        date.classList.remove('error');
+    }
+
+    if (!termsCheckbox.checked) {
+        termsCheckbox.classList.add('error');
+        valid = false;
+    } else {
+        termsCheckbox.classList.remove('error');
+    }
+
+    if (valid) {
+        // Proceed with form submission
+        alert("Form submitted successfully!");
+        // You can submit the form here
+        // document.querySelector('form').submit();
+        lastName.value = '';
+        firstName.value = '';
+        phoneNumber.value = '';
+        emailAddress.value = '';
+        date.value = '';
+        termsCheckbox.checked = false;
+    } else {
+        alert("Please fill out all required fields correctly and/or agree to the terms and conditions.");
+    }
+
+    
 });

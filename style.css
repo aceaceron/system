@@ -44,13 +44,12 @@ header a {
 }
 
 .info {
-    background-color: darkgreen;
-    width: 600px;
-    height: 750px;
-    padding-left: 50px;
-    padding-right: 50px;
-    padding-bottom: 50px;
-    color: white;
+    background-color: lightgreen;
+    width: 50%;
+    height: 115vh;
+    padding-left: 70px;
+    padding-right: 70px;
+    color: black;
     opacity: 0; /* Initially hidden */
     transform: translateY(50px); /* Initially positioned below */
     transition: all 0.5s ease-out;
@@ -72,8 +71,11 @@ input {
 #date {
     width: 500px;
 }
-#time {
-    width:430px;
+#dropdownTime {
+    padding: 10px;
+    width: 460px;
+    margin-bottom: 10px;
+    margin-top: 10px;
 }
 #dropdown0 {
     padding: 10px;
@@ -99,7 +101,7 @@ input {
     align-content: center;
 }
 
-.popup {
+.popup, .popup2 {
     display: none; /* Hidden by default */
     position: fixed;
     z-index: 1000; /* Sit on top */
@@ -111,7 +113,8 @@ input {
     background-color: rgba(0,0,0,0.4); /* Black background with opacity */
 }
 
-.popup-content {
+.popup-content, 
+.popup-content2 {
     background-color: #fefefe;
     margin: 15% auto; /* 15% from the top and centered */
     padding: 20px;
@@ -122,7 +125,7 @@ input {
     color: black;
 }
 
-.close-btn {
+.close-btn, .close-btn2 {
     color: #aaa;
     float: right;
     font-size: 28px;
@@ -130,7 +133,8 @@ input {
 }
 
 .close-btn:hover,
-.close-btn:focus {
+.close-btn:focus, .close-btn2:hover,
+.close-btn2:focus {
     color: black;
     text-decoration: none;
     cursor: pointer;
@@ -155,20 +159,20 @@ input {
 }
 
 .backgroundphoto img {
-    top: 100px;
     max-width: 100%;
-    height: auto;
+    height: 100%;
     object-fit: cover;
+    object-position: center;
 }
 
 .backgroundphoto {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 728px;
+    height: 115vh;
     opacity: 0; /* Initially hidden */
-    transform: translateY(50px); /* Initially positioned below */
-    transition: all 0.5s ease-out;
+    transform: translateY(100px); /* Initially positioned below */
+    transition: all 0.9s ease-out;
 }
 
 .backgroundphoto.visible {
@@ -180,18 +184,18 @@ a:hover {
     color: green;
 }
 
-.tac {
+.tac, .eventtac {
     cursor: pointer;
     text-decoration: underline;
 }
 
-.tac:hover {
+.tac:hover, .eventtac:hover {
     color: red;
 }
 
 .container2 {
     padding: 30px;
-    background-color: lightcoral;
+    background-color: #ff0000;
     display: flex;
 }
 .content {
@@ -219,7 +223,7 @@ a:hover {
 }
 
 .container3 {
-    height: 700px;
+    height: 400vh;
 }
 .container3 .container3-content h1 {
     font-size: 50px;
@@ -242,7 +246,7 @@ a:hover {
 }
 .container3 .container3-content .gallery {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     grid-template-rows: auto auto;
     grid-gap: 10px;
     max-width: 1000px;
@@ -259,6 +263,13 @@ a:hover {
     display: block;
     border-radius: 5px;
     transition: transform 0.3s ease;
+    opacity: 0; /* Initially hidden */
+    transform: translateY(50px); /* Initially positioned below */
+    transition: all 0.5s ease-out;
+}
+.container3 .container3-content .gallery-item img.visible {
+    opacity: 1; /* Fully visible */
+    transform: translateY(0); /* Move to original position */
 }
 .container3 .container3-content .gallery-item:hover img {
     transform: scale(1.1);
@@ -376,7 +387,7 @@ a:hover {
 }
 .container6 {
     position: relative;
-    height: 1000px;
+    height: 150vh;
     overflow: hidden;
     opacity: 0; /* Initially hidden */
     transform: translateY(50px); /* Initially positioned below */
@@ -400,7 +411,9 @@ a:hover {
     filter: blur(5px); /* Blur effect */
     z-index: 1;
 }
-
+.container6 h3{
+    font-size: 26px;
+}
 .container6 p {
     font-size: 20px;
 }
@@ -421,7 +434,7 @@ a:hover {
     justify-content: center;
     align-items: center;
     height: 100%;
-    padding: 20px;
+    padding: 40px;
     text-shadow: 1px 1px black;
 }
 .staffphoto {

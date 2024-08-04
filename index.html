@@ -24,13 +24,105 @@
     <div class="container" id="reservation">
         <div class="info">
             <h1>RESERVATION</h1>
-            LAST NAME: <input type="text">
-            FIRST NAME: <input type="text"><br>
-            PHONE NUMBER: <input type="text"><br>
-            EMAIL ADDRESS: <input type="email"><br>
+            Click <a class="eventtac">here</a> if you are planning a reservation for an <b>event rental.</b>
+            <div id="event-popup" class="popup2">
+                <div class="popup-content2">
+                    <span class="close-btn2">&times;</span>
+                    <h2>Event Reservation</h2>
+                    <p><ul>
+                        <li>We do not entertain event rental reservation via this website.</li>
+                        <li>Personal appearance of the person plan to rent is recommendable as there will be a contract in place.</li>
+                        <li>If inquiries is your purpose, you can contact us by clicking <a href="#contact">here</a> or visit us here in La Casa de Espeso.</li>
+                        <li>Face-to-face meeting of both parties is must because of how both parties can agree for the event rental.</li>
+                        <li>Minimum package: 50 pax - 3 hours - <b>PHP 5,000.00</b></li>
+                        
+                    </ul></p>
+                </div>
+            </div><br><br>
+            LAST NAME: <br><input type="text" id="lastName"><br>
+            FIRST NAME: <br><input type="text" id="firstName"><br>
+            PHONE NUMBER: <br><input type="text" id="phoneNumber"><br>
+            EMAIL ADDRESS: <br><input type="email" id="emailAddress"><br>
             <hr>
             DATE: <input type="date" id="date" min="" required>
-            STARTING TIME: <input type="time" id="time">
+            <form action="/submit" method="post">
+                STARTING TIME:
+                <select id="dropdownTime" name="dropdown">
+                    <option value="option1" selected>8:00 AM</option>
+                    <option value="option2">8:10 AM</option>
+                    <option value="option3">8:20 AM</option>
+                    <option value="option4">8:30 AM</option>
+                    <option value="option5">8:40 AM</option>
+                    <option value="option6">8:50 AM</option>
+                    <option value="option7">9:00 AM</option>
+                    <option value="option8">9:10 AM</option>
+                    <option value="option9">9:20 AM</option>
+                    <option value="option10">9:30 AM</option>
+                    <option value="option11">9:40 AM</option>
+                    <option value="option12">9:50 AM</option>
+                    <option value="option13">10:00 AM</option>
+                    <option value="option14">10:10 AM</option>
+                    <option value="option15">10:20 AM</option>
+                    <option value="option16">10:30 AM</option>
+                    <option value="option17">10:40 AM</option>
+                    <option value="option18">10:50 AM</option>
+                    <option value="option19">11:00 AM</option>
+                    <option value="option20">11:10 AM</option>
+                    <option value="option21">11:20 AM</option>
+                    <option value="option22">11:30 AM</option>
+                    <option value="option23">11:40 AM</option>
+                    <option value="option24">11:50 AM</option>
+                    <option value="option25">12:00 PM</option>
+                    <option value="option26">12:10 PM</option>
+                    <option value="option27">12:20 PM</option>
+                    <option value="option28">12:30 PM</option>
+                    <option value="option29">12:40 PM</option>
+                    <option value="option30">12:50 PM</option>
+                    <option value="option31">1:00 PM</option>
+                    <option value="option32">1:10 PM</option>
+                    <option value="option33">1:20 PM</option>
+                    <option value="option34">1:30 PM</option>
+                    <option value="option35">1:40 PM</option>
+                    <option value="option36">1:50 PM</option>
+                    <option value="option37">2:00 PM</option>
+                    <option value="option38">2:10 PM</option>
+                    <option value="option39">2:20 PM</option>
+                    <option value="option40">2:30 PM</option>
+                    <option value="option41">2:40 PM</option>
+                    <option value="option42">2:50 PM</option>
+                    <option value="option43">3:00 PM</option>
+                    <option value="option44">3:10 PM</option>
+                    <option value="option45">3:20 PM</option>
+                    <option value="option46">3:30 PM</option>
+                    <option value="option47">3:40 PM</option>
+                    <option value="option48">3:50 PM</option>
+                    <option value="option49">4:00 PM</option>
+                    <option value="option50">4:10 PM</option>
+                    <option value="option51">4:20 PM</option>
+                    <option value="option52">4:30 PM</option>
+                    <option value="option53">4:40 PM</option>
+                    <option value="option54">4:50 PM</option>
+                    <option value="option55">5:00 PM</option>
+                    <option value="option56">5:10 PM</option>
+                    <option value="option57">5:20 PM</option>
+                    <option value="option58">5:30 PM</option>
+                    <option value="option59">5:40 PM</option>
+                    <option value="option60">5:50 PM</option>
+                    <option value="option61">6:00 PM</option>
+                    <option value="option62">6:10 PM</option>
+                    <option value="option63">6:20 PM</option>
+                    <option value="option64">6:30 PM</option>
+                    <option value="option65">6:40 PM</option>
+                    <option value="option66">6:50 PM</option>
+                    <option value="option67">7:00 PM</option>
+                    <option value="option68">7:10 PM</option>
+                    <option value="option69">7:20 PM</option>
+                    <option value="option70">7:30 PM</option>
+                    <option value="option71">7:40 PM</option>
+                    <option value="option72">7:50 PM</option>
+                    <option value="option73">8:00 PM</option>
+                </select>
+            </form>
             <form action="/submit" method="post">
                 ROOM TYPE:
                 <select id="dropdown0" name="dropdown">
@@ -56,7 +148,7 @@
                     <option value="option4">3 HOURS</option>
                 </select>
             </form>
-            <input type = "checkbox" class="checkbox"> I agree to the <a class="tac">terms and condition</a> by checking this and confirming my reservation.
+            <input type = "checkbox" class="checkbox" id="termsCheckbox"> I agree to the <a class="tac">terms and condition</a> by checking this and confirming my reservation.
             <div id="terms-popup" class="popup">
                 <div class="popup-content">
                     <span class="close-btn">&times;</span>
@@ -67,7 +159,6 @@
                         <li>Arriving 5 minutes before the selected time is a must.</li>
                         <li>If you arrived exactly 10 minutes into your selected time in, your reservation is INVALID</li>
                     </ul></p>
-                    
                 </div>
             </div>
             <button class="confirm">Confirm</button>
@@ -113,8 +204,56 @@
                 <div class="gallery-item">
                     <img src="img/bg07.jpg">
                 </div>
-                <div class="gallery-item large">
+                <div class="gallery-item">
                     <img src="img/bg08.jpg">
+                </div>
+                <div class="gallery-item">
+                    <img src="img/bg09.jpg">
+                </div>
+                <div class="gallery-item">
+                    <img src="img/bg10.jpg">
+                </div>
+                <div class="gallery-item">
+                    <img src="img/bg11.jpg">
+                </div>
+                <div class="gallery-item">
+                    <img src="img/bg12.jpg">
+                </div>
+                <div class="gallery-item">
+                    <img src="img/bg13.jpg">
+                </div>
+                <div class="gallery-item">
+                    <img src="img/bg14.jpg">
+                </div>
+                <div class="gallery-item">
+                    <img src="img/bg15.jpg">
+                </div>
+                <div class="gallery-item">
+                    <img src="img/bg16.jpg">
+                </div>
+                <div class="gallery-item">
+                    <img src="img/bg17.jpg">
+                </div>
+                <div class="gallery-item">
+                    <img src="img/bg18.jpg">
+                </div>
+                <div class="gallery-item">
+                    <img src="img/bg19.jpg">
+                </div>
+                <div class="gallery-item">
+                    <img src="img/bg20.jpg">
+                </div>
+                <div class="gallery-item">
+                    <img src="img/bg21.jpg">
+                </div>
+                <div class="gallery-item">
+                    <img src="img/bg22.jpg">
+                </div>
+                <div class="gallery-item">
+                    <img src="img/bg23.jpg">
+                </div>
+                <div class="gallery-item">
+                    <img src="img/bg24.jpg">
                 </div>
             </div>
         </div>
@@ -142,7 +281,7 @@
         <h3>Contact info</h3>
         <ul>
             <a href="https://maps.app.goo.gl/AHUu62ghPErESMya8" target="_blank"><li><img src="img/location.png" class="contactinfo">Spanish Road, Purok IV, Brgy. Malasugui, Labo, Camarines Norte, Philippines</li></a>
-            <li><img src="img/phone.png" class="contactinfo">0935 896 8651</li>
+            <li><img src="img/phone.png" class="contactinfo">0935 896 8651 / 0970 146 5550 / 0920 421 8502</li>
             <a href="https://www.facebook.com/LaCasaDeEspeso" target="_blank"><li><img src="img/facebook.png" class="contactinfo">Facebook Page - La Casa De Espeso</li></a>
         </ul>
     </div>
@@ -150,39 +289,32 @@
     <div class="container6" id="aboutus">
         <div class="container6-content"></div>
         <div class="container6-content3">
-            <h1>About La Casa De Espeso</h1>
+            <br><br><h1>About La Casa De Espeso</h1>
             <p>
-                Welcome to La Casa de Espeso, your serene retreat in the heart of Labo, Camarines Norte. Our charming hotel, with its distinctive turquoise facade, offers a welcoming atmosphere for both leisure and business travelers.
+                Welcome to La Casa de Espeso, your serene retreat in the heart of Labo, Camarines Norte. Opened last 2023, we have welcomed hundreds and counting customer in our paradise. Our charming hotel, with its distinctive turquoise facade, offers a welcoming atmosphere for both leisure and business travelers.
 
-                We pride ourselves on exceptional hospitality, tight security and personalized service. Our spacious rooms feature cozy bedding, adequate bathing area and relaxing view. La Casa de Espeso is the perfect base for exploring Camarines Norte. Our concierge team is ready to ensure your stay is seamless and enjoyable.
+                We pride ourselves on exceptional hospitality, tight security and personalized service. Our spacious rooms feature cozy bedding, adequate bathing area and relaxing experience. La Casa de Espeso is the perfect base for exploring Camarines Norte. Our concierge team is ready to ensure your stay is seamless and enjoyable.
                 
                 Experience comfort, luxury, and convenience at La Casa de Espeso. We look forward to welcoming you!
             </p>
-            <hr>
             <h1>Staffs and Officers</h1>
             <div class="container6-content1">
                 <div class="container6-content2">
-                    <img src="img/user.png" class="staffphoto"><h3>NAME</h3><p>ROLE</p>
+                    <img src="img/user.png" class="staffphoto"><h3>Sarina B. Espeso</h3><p>CO-OWNER</p>
                 </div>
                 <div class="container6-content2">
-                    <img src="img/user.png" class="staffphoto"><h3>NAME</h3><p>ROLE</p>
-                </div>
-                <div class="container6-content2">
-                    <img src="img/user.png" class="staffphoto"><h3>NAME</h3><p>ROLE</p>
+                    <img src="img/user.png" class="staffphoto"><h3>Gary B. Espeso</h3><p>CO-OWNER</p>
                 </div>   
             </div>
             <div class="container6-content1">
                 <div class="container6-content2">
-                    <img src="img/user.png" class="staffphoto"><h3>NAME</h3><p>ROLE</p>
+                    <img src="img/user.png" class="staffphoto"><h3>April E. Tan</h3><p>EMPLOYEE</p>
                 </div>
                 <div class="container6-content2">
-                    <img src="img/user.png" class="staffphoto"><h3>NAME</h3><p>ROLE</p>
-                </div>
-                <div class="container6-content2">
-                    <img src="img/user.png" class="staffphoto"><h3>NAME</h3><p>ROLE</p>
+                    <img src="img/user.png" class="staffphoto"><h3>Madilyn E. Tan</h3><p>EMPLOYEE</p>
                 </div>   
                 <div class="container6-content2">
-                    <img src="img/user.png" class="staffphoto"><h3>NAME</h3><p>ROLE</p>
+                    <img src="img/user.png" class="staffphoto"><h3>Melody Francisco</h3><p>EMPLOYEE</p>
                 </div>  
             </div>
         </div>
@@ -193,9 +325,6 @@
     </footer>
     
     <script src="script.js">
-        // scripts.js
-        
-        
     </script>
         
 
