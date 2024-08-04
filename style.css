@@ -284,6 +284,7 @@ a:hover {
     justify-content: center;
     display: flex;
     flex-direction: column;
+
 }
 .comment-box {
     width: 100%;
@@ -294,6 +295,7 @@ a:hover {
     opacity: 0; /* Initially hidden */
     transform: translateY(50px); /* Initially positioned below */
     transition: all 0.5s ease-out;
+    font-family: 'Footlight MT Light';
 }
 .comment-box.visible {
     opacity: 1; /* Fully visible */
@@ -308,6 +310,7 @@ a:hover {
     margin-bottom: 10px;
     border-radius: 5px;
     border: 1px solid #ccc;
+    font-family: 'Footlight MT Light';
 }
 .comment-box textarea {
     margin-top: 5px;
@@ -397,7 +400,16 @@ a:hover {
     transform: translateY(50px); /* Initially positioned below */
     transition: all 0.5s ease-out;
 }
-
+.loginpage {
+    cursor: pointer;
+    text-decoration: none;
+    color: white;
+}
+.loginpage:hover {
+    cursor: pointer;
+    text-decoration: none;
+    color: white;
+}
 .container6.visible {
     opacity: 1; /* Fully visible */
     transform: translateY(0); /* Move to original position */

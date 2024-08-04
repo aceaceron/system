@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin | La Casa de Espeso</title>
+    <style>
+        * {
+            font-family: 'Footlight MT Light';
+        }
+        .bg {
+            background-image: url("img/bg01.jpg");
+            width: 100%;
+            height: 100%;
+            background-size: cover; 
+            background-repeat: no-repeat; 
+            background-position: center; 
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: -1; /* Ensure the background is behind other elements */
+            filter: blur(3px);
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            padding: 10px;
+        }
+        .hello {
+            padding-right: 20px;
+        }
+        .date-time {
+            font-size: 16px;
+        }
+        .logo {
+            width: 25vh;
+            transition: all 0.5s ease;
+            text-align: center;
+        }
+        .menu-container {
+            display: flex;
+            align-items: center;
+        }
+        .menu-button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            background: none; /* Ensure no background */
+            display: none;
+            transition: all 0.5s ease-out;
+        }
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            background-color: white;
+            box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+            z-index: 1;
+            border-radius: 5px;
+            margin-top: 5px;
+            width: 200px;
+        }
+        .dropdown-menu a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            border-radius: 5px;
+        }
+        .dropdown-menu a:hover {
+            background-color: #f1f1f1;
+        }
+        nav {
+            height: 100%;
+            width: 12%;
+            font-size: 20px;
+            display: flex;
+            flex-direction: row;
+            text-align: center;
+        }
+        nav ul li {
+            list-style: none;
+            line-height: 10vh;
+        }
+        nav ul li a {
+            cursor: default;
+        }
+
+        @media screen and (max-width: 600px) {
+            .logo {
+                width: 30vh;
+                height: auto;
+                padding-left: 10vh;
+            }
+            .header {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+            }
+            
+            .menu-button {
+                display: inline-flex;
+                flex-direction: start;
+                font-size: 40px;
+                position: absolute;
+                top: 7vh;
+            }
+            .menu-container {
+                display: inline-block; 
+            }
+            .dropdown-menu {
+                position: absolute;
+                top: 20vh;
+                width: 30%;
+            }
+            nav {
+                display: none;
+            }
+            
+        }
+    </style>
+</head>
+<body>
+    <div class="bg"></div>
+    
+    <div class="header">
+        <div class="menu-container">
+            <button class="menu-button"><i class="fa-solid fa-bars"></i></button>
+            <div class="dropdown-menu">
+                <a href="#">DASHBOARD</a>
+                <a href="#">ACCOUNTS</a>
+            </div>
+            <img src="img/logo.png" class="logo">
+        </div>
+        <h3 class="hello">Hello, Admin<div class="date-time" id="dateTime"></div></h3>
+    </div>
+    
+    <nav>
+        <ul>
+            <li id="dashboard"><a>DASHBOARD</a></li>
+            <li id="accounts"><a>ACCOUNTS</a></li>
+        </ul>
+    </nav>
+
+    <div class="dashboard">
+
+    </div>
+
+
+    <script>
+        document.querySelector('.menu-button').addEventListener('click', function() {
+            const dropdownMenu = document.querySelector('.dropdown-menu');
+            dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
+        });
+    
+        window.onclick = function(event) {
+            if (!event.target.matches('.menu-button')) {
+                const dropdownMenu = document.querySelector('.dropdown-menu');
+                if (dropdownMenu.style.display === 'block') {
+                    dropdownMenu.style.display = 'none';
+                }
+            }
+        };
+    
+        // Adjust menu display on window resize
+        window.addEventListener('resize', function() {
+            const menuContainer = document.querySelector('.menu-container');
+            const dropdownMenu = document.querySelector('.dropdown-menu');
+            if (window.innerWidth > 600) {
+                dropdownMenu.style.display = 'none'; // Hide dropdown if screen is larger than 600px
+            }
+        });
+        window.addEventListener('resize', function() {
+            const menuContainer = document.querySelector('.menu-container');
+            const dropdownMenu = document.querySelector('.dropdown-menu');
+            if (window.innerWidth > 600) {
+                dropdownMenu.style.display = 'none'; // Hide dropdown if screen is larger than 600px
+            }
+        });
+
+        function updateDateTime() {
+            const dateTimeElement = document.getElementById('dateTime');
+            const now = new Date();
+            const formattedDateTime = now.toLocaleString();
+            dateTimeElement.textContent = formattedDateTime;
+        }
+
+        // Update date and time every second
+        setInterval(updateDateTime, 1000);
+        updateDateTime(); // Initial call to display the current date and time immediately
+    
+    </script>
+    <script src="https://kit.fontawesome.com/b629388bc1.js" crossorigin="anonymous"></script>
+</body>
+</html>

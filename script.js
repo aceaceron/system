@@ -29,21 +29,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
     
 });
-var today = new Date();
+        var today = new Date();
 
         // Calculate tomorrow's date
         var tomorrow = new Date(today);
         tomorrow.setDate(today.getDate() + 1);
 
+        // Calculate the date 60 days from today
+        var maxDate = new Date(today);
+        maxDate.setDate(today.getDate() + 60);
+
         // Format tomorrow's date as yyyy-mm-dd
-        var dd = String(tomorrow.getDate()).padStart(2, '0');
-        var mm = String(tomorrow.getMonth() + 1).padStart(2, '0'); // January is 0!
-        var yyyy = tomorrow.getFullYear();
+        var ddTomorrow = String(tomorrow.getDate()).padStart(2, '0');
+        var mmTomorrow = String(tomorrow.getMonth() + 1).padStart(2, '0');
+        var yyyyTomorrow = tomorrow.getFullYear();
+        var tomorrowFormatted = yyyyTomorrow + '-' + mmTomorrow + '-' + ddTomorrow;
 
-        var tomorrowFormatted = yyyy + '-' + mm + '-' + dd;
+        // Format the max date as yyyy-mm-dd
+        var ddMax = String(maxDate.getDate()).padStart(2, '0');
+        var mmMax = String(maxDate.getMonth() + 1).padStart(2, '0');
+        var yyyyMax = maxDate.getFullYear();
+        var maxDateFormatted = yyyyMax + '-' + mmMax + '-' + ddMax;
 
-        // Set the min attribute of the date input to tomorrow's date
-        document.getElementById('date').setAttribute('min', tomorrowFormatted);
+        // Set the min and max attributes of the date input
+        var dateInput = document.getElementById('date');
+        dateInput.setAttribute('min', tomorrowFormatted);
+        dateInput.setAttribute('max', maxDateFormatted);
+
 // Section 2: Comment Handling
 function addComment() {
     const nameInput = document.getElementById('nameInput');
