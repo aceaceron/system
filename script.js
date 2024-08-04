@@ -151,6 +151,10 @@ document.querySelector('.confirm').addEventListener('click', function(event) {
     const emailAddress = document.getElementById('emailAddress');
     const date = document.getElementById('date');
     const termsCheckbox = document.getElementById('termsCheckbox');
+    const startingTime = document.getElementById("dropdownTime");
+    const roomType = document.getElementById("dropdown0");
+    const duration = document.getElementById("dropdown1");
+    const extension = document.getElementById("dropdown2");
 
     let valid = true;
 
@@ -197,19 +201,52 @@ document.querySelector('.confirm').addEventListener('click', function(event) {
     }
 
     if (valid) {
-        // Proceed with form submission
-        alert("Form submitted successfully!");
-        // You can submit the form here
-        // document.querySelector('form').submit();
-        lastName.value = '';
-        firstName.value = '';
-        phoneNumber.value = '';
-        emailAddress.value = '';
-        date.value = '';
-        termsCheckbox.checked = false;
+        // Save the form data to Firebase
+        reservationFormDB.push().set({
+            lastName: lastName.value,
+            firstName: firstName.value,
+            phoneNumber: phoneNumber.value,
+            emailAddress: emailAddress.value,
+            date: date.value,
+            startingTime: startingTime.value,
+            roomType: roomType.value,
+            duration: duration.value,
+            extension: extension.value
+            
+        }).then(() => {
+            alert("Form submitted successfully!");
+            
+            // Clear form fields
+            lastName.value = '';
+            firstName.value = '';
+            phoneNumber.value = '';
+            emailAddress.value = '';
+            date.value = '';
+            termsCheckbox.checked = false;
+        }).catch((error) => {
+            console.error("Error writing to Firebase: ", error);
+        });
     } else {
         alert("Please fill out all required fields correctly and/or agree to the terms and conditions.");
     }
-
-    
 });
+
+const getElementVal = (id) => {
+    return document.getElementById(id).value;
+}
+
+
+const firebaseConfig = {
+    apiKey: "AIzaSyBODzmflzkSTC33eAwG9eauL8Ae-3Y2MVA",
+    authDomain: "lcdedb-reservation.firebaseapp.com",
+    databaseURL: "https://lcdedb-reservation-default-rtdb.firebaseio.com",
+    projectId: "lcdedb-reservation",
+    storageBucket: "lcdedb-reservation.appspot.com",
+    messagingSenderId: "197167711977",
+    appId: "1:197167711977:web:12a6ff866758a6a1639278"
+};
+
+
+firebase.initializeApp(firebaseConfig);
+
+var reservationFormDB = firebase.database().ref("reservationForm");
