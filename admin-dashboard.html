@@ -13,6 +13,7 @@
             width: 100%;
             height: 100%;
             background-size: cover; 
+            background-attachment: fixed;
             background-repeat: no-repeat; 
             background-position: center; 
             position: absolute;
@@ -20,6 +21,7 @@
             left: 0;
             z-index: -1; /* Ensure the background is behind other elements */
             filter: blur(3px);
+            padding: 300px;
         }
         .header {
             display: flex;
@@ -75,11 +77,17 @@
         }
         nav {
             height: 100%;
-            width: 12%;
+            width: 10%;
             font-size: 20px;
             display: flex;
             flex-direction: row;
             text-align: center;
+            color: white;
+            text-shadow: 1px 1px 0 black;
+        }
+        .navigation {
+            width: 10%;
+            float: left;
         }
         nav ul li {
             list-style: none;
@@ -88,10 +96,86 @@
         nav ul li a {
             cursor: default;
         }
+        .reservation {
+            background-color: white;
+            width: 80%;
+            height: 20vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            float: inline-start;
+        }
+        .dashboard {
+            height: 100vh;
+            width: 80%;
+            display: flex;
+            flex-direction: column;
+        }
+        .rooms {
+            width: auto;
+            display: flex;
+            flex-direction: row;
+        }
+        .room {
+            color: black;
+            background-color: skyblue;
+            padding: 2px;
+            padding-left: 10px;
+            height: 10vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            margin: 10px;
+            border-radius: 20px;
+            width: 50%;
+            font-size: 20px;
+        }
+        .sliding-panel {
+            position: fixed;
+            top: 0;
+            right: -400px; /* Start hidden off-screen */
+            width: 300px;
+            height: 100vh;
+            background-color: white;
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.3);
+            transition: right 0.5s ease;
+            overflow-y: auto;
+            padding: 20px;
+            z-index: 1000; /* Ensure it's above other content */
+        }
+        .sliding-panel.show {
+            right: 0; /* Slide in */
+        }
+        .sliding-panel .close-btn {
+            display: block;
+            margin-bottom: 10px;
+            cursor: pointer;
+            font-size: 20px;
+            text-align: right;
+        }
+        #roomInfo {
+            text-align: center;
+            font-size: 36px;
+        }
+        .duration {
+            font-size: 30px;
+            background-color: skyblue;
+            padding: 30px;
+            border-radius: 40px;
+            width: 100%;
+            margin-top: 10px;
+        }
+        .duration:hover {
+            font-size: 30px;
+            background-color: skyblue;
+            padding: 30px;
+            border-radius: 40px;
+            width: 100%;
 
-        @media screen and (max-width: 600px) {
+        }
+        @media screen and (max-width: 1000px) {
             .logo {
-                width: 30vh;
+                width: 20vh;
                 height: auto;
                 padding-left: 10vh;
             }
@@ -104,20 +188,36 @@
             .menu-button {
                 display: inline-flex;
                 flex-direction: start;
-                font-size: 40px;
+                font-size: 30px;
                 position: absolute;
-                top: 7vh;
+                top: 5vh;
             }
             .menu-container {
                 display: inline-block; 
             }
             .dropdown-menu {
                 position: absolute;
-                top: 20vh;
+                top: 12vh;
                 width: 30%;
             }
             nav {
                 display: none;
+            }
+            .reservation {
+                background-color: white;
+                width: 100%;
+                height: 20vh;
+            }
+            .dashboard {
+                width: 100%;
+            }
+            .rooms {
+                display: flex;
+                flex-direction: column;
+                padding-right: 5%;
+            }
+            .room {
+                width: 100%;
             }
             
         }
@@ -138,15 +238,45 @@
         <h3 class="hello">Hello, Admin<div class="date-time" id="dateTime"></div></h3>
     </div>
     
-    <nav>
-        <ul>
-            <li id="dashboard"><a>DASHBOARD</a></li>
-            <li id="accounts"><a>ACCOUNTS</a></li>
-        </ul>
-    </nav>
-
+    <div class="navigation">
+        <nav>
+            <ul>
+                <li id="dashboard"><a>DASHBOARD</a></li>
+                <li id="accounts"><a>ACCOUNTS</a></li>
+            </ul>
+        </nav>
+    </div>
+    
+    <div class="reservation"></div>
     <div class="dashboard">
+        <div class="rooms">
+            <button class="room" id="room1" data-room="1">ROOM 1 <i class="fa-solid fa-fan"></i></button>
+            <button class="room" id="room2" data-room="2">ROOM 2 <i class="fa-regular fa-snowflake"></i></button>
+        </div>
+        <div class="rooms">
+            <button class="room" id="room3" data-room="3">ROOM 3 <i class="fa-solid fa-fan"></i></button>
+            <button class="room" id="room4" data-room="4">ROOM 4 <i class="fa-regular fa-snowflake"></i></button>
+        </div>
+        <div class="rooms">
+            <button class="room" id="room5" data-room="5">ROOM 5 <i class="fa-solid fa-fan"></i></button>
+            <button class="room" id="room6" data-room="6">ROOM 6 <i class="fa-regular fa-snowflake"></i></button>
+        </div>
+        <div class="rooms">
+            <button class="room" id="room7" data-room="7">ROOM 7<i class="fa-solid fa-fan"></i></button>
+            <button class="room" id="room8" data-room="8">ROOM 8 <i class="fa-regular fa-snowflake"></i></button>
+        </div>
+        <div class="rooms">
+            <button class="room" id="room9" data-room="9">ROOM 9<i class="fa-regular fa-snowflake"></i></button>
+            <button class="room" id="room10" data-room="10">ROOM 10<i class="fa-regular fa-snowflake"></i></button>
+        </div>
+    </div>
 
+    <div class="sliding-panel" id="slidingPanelAvail">
+        <div class="close-btn" id="closeBtn">&times;</div>
+        <div id="roomInfo">Select a room to see the details.</div>
+        <button class="duration">3 HOURS<br>300.00</button>
+        <button class="duration">6 HOURS<br>500.00</button>
+        <button class="duration">24 HOURS<br>1000.00</button>
     </div>
 
 
@@ -164,15 +294,24 @@
                 }
             }
         };
-    
-        // Adjust menu display on window resize
-        window.addEventListener('resize', function() {
-            const menuContainer = document.querySelector('.menu-container');
-            const dropdownMenu = document.querySelector('.dropdown-menu');
-            if (window.innerWidth > 600) {
-                dropdownMenu.style.display = 'none'; // Hide dropdown if screen is larger than 600px
-            }
+
+        // Sliding panel functionality
+        const slidingPanelAvail = document.getElementById('slidingPanelAvail');
+        const closeBtn = document.getElementById('closeBtn');
+        const roomInfo = document.getElementById('roomInfo');
+
+        document.querySelectorAll('.room').forEach(roomButton => {
+            roomButton.addEventListener('click', function() {
+                const roomId = this.dataset.room;
+                roomInfo.textContent = `ROOM ${roomId}`;
+                slidingPanelAvail.classList.add('show');
+            });
         });
+
+        closeBtn.addEventListener('click', function() {
+            slidingPanelAvail.classList.remove('show');
+        });
+
         window.addEventListener('resize', function() {
             const menuContainer = document.querySelector('.menu-container');
             const dropdownMenu = document.querySelector('.dropdown-menu');
@@ -188,10 +327,8 @@
             dateTimeElement.textContent = formattedDateTime;
         }
 
-        // Update date and time every second
         setInterval(updateDateTime, 1000);
-        updateDateTime(); // Initial call to display the current date and time immediately
-    
+        updateDateTime();
     </script>
     <script src="https://kit.fontawesome.com/b629388bc1.js" crossorigin="anonymous"></script>
 </body>
