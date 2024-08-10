@@ -21,7 +21,11 @@
             left: 0;
             z-index: -1; /* Ensure the background is behind other elements */
             filter: blur(3px);
-            padding: 300px;
+            padding-bottom: 20vh;
+            margin: 0;
+        }
+        body {
+            background-color: white;
         }
         .header {
             display: flex;
@@ -95,10 +99,15 @@
         }
         nav ul li a {
             cursor: default;
+            font-size: 30px;
+        }
+        #dashboard {
+            padding-bottom: 50px;
+            width: 80px;
         }
         .reservation {
             background-color: white;
-            width: 80%;
+            width: 100%;
             height: 20vh;
             display: flex;
             flex-direction: column;
@@ -106,10 +115,14 @@
             float: inline-start;
         }
         .dashboard {
-            height: 100vh;
+            height: auto;
             width: 80%;
+            
             display: flex;
             flex-direction: column;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 30px;
+            border-radius: 30px;
         }
         .rooms {
             width: auto;
@@ -128,6 +141,16 @@
             margin: 10px;
             border-radius: 20px;
             width: 50%;
+            font-size: 20px;
+            position: relative;
+            padding-right: 60px; /* Adjust as needed to make room for the text */
+        }
+        .availability-text {
+            position: absolute;
+            right: 10px; /* Position the text to the far right of the button */
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 14px; /* Adjust the size as needed */
             font-size: 20px;
         }
         .sliding-panel {
@@ -153,25 +176,137 @@
             font-size: 20px;
             text-align: right;
         }
-        #roomInfo {
+        #roomInfoNonAircon, #roomInfoAircon, #roomInfoUnavail {
             text-align: center;
             font-size: 36px;
         }
         .duration {
-            font-size: 30px;
+            font-size: 25px;
             background-color: skyblue;
-            padding: 30px;
+            padding: 25px;
             border-radius: 40px;
             width: 100%;
             margin-top: 10px;
+            transition: all 0.5s ease;
         }
         .duration:hover {
-            font-size: 30px;
-            background-color: skyblue;
-            padding: 30px;
-            border-radius: 40px;
-            width: 100%;
+            background-color: blue;
+            color: white;
+        }
+        #slidingPanelAirconAvail h3, #slidingPanelNonAirconAvail h3, #slidingPanelUnavail h3{
+            text-align: center;
+        }
 
+        .numOfGuest {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            font-size: 20px;
+        }
+
+        .numOfGuestInput {
+            display: inline-flex;
+            align-items: center;
+            flex-direction: row;
+        }
+
+        .numOfGuestInput button {
+            background-color: skyblue;
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            cursor: pointer;
+            font-size: 30px;
+        }
+
+        .numOfGuestInput button:active {
+            background-color: #0056b3;
+        }
+
+        .numOfGuestInput input {
+            width: 80px;
+            text-align: center;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-left: none;
+            border-right: none;
+            outline: none;
+            font-size: 30px;
+        }
+
+        .numOfGuestInput input:focus {
+            border-color: #007bff;
+        }
+
+        .menuLogo {
+            width: 30px;
+        }
+        #unavailDetails p{
+            font-size: 18px;
+        }
+        .confirmationWindow {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .paymentConfirmation {
+            width: 300px;
+            background-color: white;
+            border-radius: 30px;
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.1);
+            padding: 30px;
+            z-index: 9999;
+            border: 1px solid black;
+            visibility: hidden;
+            transition: transform 0.4s, top 0.4s;
+        }
+        .open-paymentConfirmation {
+            visibility: visible;
+            top: 50%;
+            transform: translate(-50%, -50%) scale(1);
+        }
+        .btnConfirmation {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+        }
+        .paymentInfo div{
+            padding: 10px;
+        }
+        #yesBtn, #noBtn, #extendHr, #timeOut {
+            padding: 10px;
+            width: 120px;
+            border-radius: 30px;
+        }
+        #yesBtn {
+            background-color: green;
+            color: white;
+            transition: all 0.5s ease;
+        }
+        #yesBtn:disabled {
+            background-color: gray;
+        }
+        #extendHr {
+            background: blue;
+            color: white;
+            font-size: 26px;
+            width: 100%;
+            margin: 10px 0 10px 0;
+        }
+        #noBtn, #timeOut {
+            background-color: red;
+            color: white;
+        }
+        #timeOut {
+            font-size: 26px;
+            width: 100%;
+            margin: 10px 0 10px 0;
         }
         @media screen and (max-width: 1000px) {
             .logo {
@@ -184,11 +319,14 @@
                 flex-direction: row;
                 align-items: center;
             }
-            
+            .bg {
+                padding-right: 0;
+                padding-bottom: 80vh;
+                margin: 0;
+            }
             .menu-button {
                 display: inline-flex;
                 flex-direction: start;
-                font-size: 30px;
                 position: absolute;
                 top: 5vh;
             }
@@ -209,7 +347,7 @@
                 height: 20vh;
             }
             .dashboard {
-                width: 100%;
+                width: auto;
             }
             .rooms {
                 display: flex;
@@ -228,7 +366,7 @@
     
     <div class="header">
         <div class="menu-container">
-            <button class="menu-button"><i class="fa-solid fa-bars"></i></button>
+            <button class="menu-button"><img src="img/menu.png" class="menuLogo"></button>
             <div class="dropdown-menu">
                 <a href="#">DASHBOARD</a>
                 <a href="#">ACCOUNTS</a>
@@ -241,53 +379,166 @@
     <div class="navigation">
         <nav>
             <ul>
-                <li id="dashboard"><a>DASHBOARD</a></li>
-                <li id="accounts"><a>ACCOUNTS</a></li>
+                <li id="dashboard"><a><i class="fa-solid fa-table-columns"></i></a></li>
+                <li id="accounts"><a><i class="fa-regular fa-user"></i></a></li>
             </ul>
         </nav>
     </div>
     
-    <div class="reservation"></div>
+    
     <div class="dashboard">
+        <div class="reservation"></div>
         <div class="rooms">
-            <button class="room" id="room1" data-room="1">ROOM 1 <i class="fa-solid fa-fan"></i></button>
-            <button class="room" id="room2" data-room="2">ROOM 2 <i class="fa-regular fa-snowflake"></i></button>
+            <button id="room1" class="room" data-room="1">
+                ROOM 1 <i class="fa-solid fa-fan"></i>
+                <span class="availability-text">Available</span>
+            </button>
+            <button class="room aircon" id="room2" data-room="2">
+                ROOM 2 <i class="fa-regular fa-snowflake"></i>
+                <span class="availability-text">Available</span>
+            </button>
         </div>
         <div class="rooms">
-            <button class="room" id="room3" data-room="3">ROOM 3 <i class="fa-solid fa-fan"></i></button>
-            <button class="room" id="room4" data-room="4">ROOM 4 <i class="fa-regular fa-snowflake"></i></button>
+            <button class="room non-aircon" id="room3" data-room="3">
+                ROOM 3 <i class="fa-solid fa-fan"></i>
+                <span class="availability-text">Available</span>
+            </button>
+            <button class="room aircon" id="room4" data-room="4">
+                ROOM 4 <i class="fa-regular fa-snowflake"></i>
+                <span class="availability-text">Available</span>
+            </button>
         </div>
         <div class="rooms">
-            <button class="room" id="room5" data-room="5">ROOM 5 <i class="fa-solid fa-fan"></i></button>
-            <button class="room" id="room6" data-room="6">ROOM 6 <i class="fa-regular fa-snowflake"></i></button>
+            <button class="room non-aircon" id="room5" data-room="5">
+                ROOM 5 <i class="fa-solid fa-fan"></i>
+                <span class="availability-text">Available</span>
+            </button>
+            <button class="room aircon" id="room6" data-room="6">
+                ROOM 6 <i class="fa-regular fa-snowflake"></i>
+                <span class="availability-text">Available</span>
+            </button>
         </div>
         <div class="rooms">
-            <button class="room" id="room7" data-room="7">ROOM 7<i class="fa-solid fa-fan"></i></button>
-            <button class="room" id="room8" data-room="8">ROOM 8 <i class="fa-regular fa-snowflake"></i></button>
+            <button class="room non-aircon" id="room7" data-room="7">
+                ROOM 7<i class="fa-solid fa-fan"></i>
+                <span class="availability-text">Available</span>
+            </button>
+            <button class="room aircon" id="room8" data-room="8">
+                ROOM 8 <i class="fa-regular fa-snowflake"></i>
+                <span class="availability-text">Available</span>
+            </button>
         </div>
         <div class="rooms">
-            <button class="room" id="room9" data-room="9">ROOM 9<i class="fa-regular fa-snowflake"></i></button>
-            <button class="room" id="room10" data-room="10">ROOM 10<i class="fa-regular fa-snowflake"></i></button>
+            <button class="room non-aircon" id="room9" data-room="9">
+                ROOM 9<i class="fa-regular fa-snowflake"></i>
+                <span class="availability-text">Available</span>
+            </button>
+            <button class="room aircon" id="room10" data-room="10">
+                ROOM 10<i class="fa-regular fa-snowflake"></i>
+                <span class="availability-text">Available</span>
+            </button>
         </div>
     </div>
 
-    <div class="sliding-panel" id="slidingPanelAvail">
-        <div class="close-btn" id="closeBtn">&times;</div>
-        <div id="roomInfo">Select a room to see the details.</div>
-        <button class="duration">3 HOURS<br>300.00</button>
-        <button class="duration">6 HOURS<br>500.00</button>
-        <button class="duration">24 HOURS<br>1000.00</button>
+    <div class="sliding-panel" id="slidingPanelNonAirconAvail">
+        <div class="close-btn" id="closeBtnNonAircon">&times;</div>
+        <div id="roomInfoAircon">Select a room to see the details.</div>
+        <h3>STANDARD ROOM</h3>
+        <button class="duration" type="submit" onclick="openPopUpPaymentWindow('Standard Room', 3, 300)">3 HOURS<br>PHP 300.00</button>
+        <button class="duration" type="submit" onclick="openPopUpPaymentWindow('Standard Room', 6, 500)">6 HOURS<br>PHP 500.00</button>
+        <button class="duration" type="submit" onclick="openPopUpPaymentWindow('Standard Room', 24, 1000)">24 HOURS<br>PHP 1000.00</button>
+        <div class="numOfGuest">
+            NUMBER OF GUEST
+            <div class="numOfGuestInput">
+                <button onclick="updateGuestCount('numberOfGuestNonAircon', false)">-</button>
+                <input type="text" id="numberOfGuestNonAircon" value="2" oninput="validateInput(this)">
+                <button onclick="updateGuestCount('numberOfGuestNonAircon', true)">+</button>
+            </div>
+            <p style="color: red;">If the number of guests exceed 2 guests, additional fee of <b>PHP 200.00</b> per guest, maximum of 6 guests per room.</p>
+        </div>
     </div>
+    
+    <div class="sliding-panel" id="slidingPanelAirconAvail">
+        <div class="close-btn" id="closeBtnAircon">&times;</div>
+        <div id="roomInfoNonAircon">Select a room to see the details.</div>
+        <h3>AIR-CONDITIONED ROOM</h3>
+        <button class="duration" type="submit" onclick="openPopUpPaymentWindow('Air-conditioned Room', 3, 500)">3 HOURS<br>PHP 500.00</button>
+        <button class="duration" type="submit" onclick="openPopUpPaymentWindow('Air-conditioned Room', 6, 800)">6 HOURS<br>PHP 800.00</button>
+        <button class="duration" type="submit" onclick="openPopUpPaymentWindow('Air-conditioned Room', 24, 1500)">24 HOURS<br>PHP 1500.00</button>
+        <div class="numOfGuest">
+            NUMBER OF GUEST
+            <div class="numOfGuestInput">
+                <button onclick="updateGuestCount('numberOfGuestAircon', false)">-</button>
+                <input type="text" id="numberOfGuestAircon" value="2" oninput="validateInput(this)">
+                <button onclick="updateGuestCount('numberOfGuestAircon', true)">+</button>
+            </div>
+            <p style="color: red;">If the number of guests exceed 2 guests, additional fee of <b>PHP 250.00</b> per guest, maximum of 6 guests per room.</p>
+        </div>
+    </div>
+
+    <div class="sliding-panel" id="slidingPanelUnavail">
+        <div class="close-btn" id="closeBtnUnavail">&times;</div>
+        <div id="roomInfoUnavail">Select a room to see the details.</div>
+        <h3>UNAVAILABLE</h3>
+        <div id="unavailDetails">
+            <p>Room Type:<br><span id="UnavailRoomType"></span></p>
+            <p>Duration:<br><span id="UnavailDuration"></span></p>
+            <p>Date of Check-in:<br><span id="UnavailCheckInDate"></span></p>
+            <p>Time In:<br><span id="UnavailCheckInTime"></span></p>
+            <p>Date of Check-out:<br><span id="UnavailCheckOutDate"></span></p>
+            <p>Time Out:<br><span id="UnavailCheckOutTime"></span></p>
+            <p>Number of Guest:<br><span id="UnavailNumOfGuest"></span></p>
+            <p>Total Duration:<br><span id="UnavailExtension"></span></p>
+            <p>Amount paid:<br><span id="UnavailTotalAmountPaid"></span></p>
+        </div>
+        
+        <button type="button" id="extendHr">EXTEND 1 HOUR</button><br>
+        <button type="button" id="timeOut">TIME OUT</button>
+    </div>
+    
+
+    <div class="confirmationWindow">
+        <div class="paymentConfirmation" id="popupPaymentWindow">
+            <h3>Are you sure the customer paid for the following:</h3>
+            <div class="paymentInfo">
+                <div id="ConfirmationroomNum">Room Number: </div>
+                <div id="ConfirmationroomType">Room Type: </div>
+                <div id="ConfirmationDuration">Duration: </div>
+                <hr>
+                <div id="ConfirmationCheckInDate">Date of Check-in: </div>
+                <div id="ConfirmationCheckInTime">Time In: </div>
+                <hr>
+                <div id="ConfirmationCheckOutDate">Date of Check-Out: </div>
+                <div id="ConfirmationCheckOutTime">Time Out: </div>
+                <hr>
+                <div id="ConfirmationAmountPaid">Room Rate: </div>
+                <div id="ConfirmationNumOfGuest">Number of Guest: </div>
+                
+                <div id="ConfirmationTotalAmountPaid">Total Amount Paid: </div>
+                <p style="color: red;">
+                    <input type="checkbox" id="paymentConfirmationChkbox">
+                    As the admin, I have read all the information above and if I agree to this action, it will be unreversable.
+                </p>
+                <div class="btnConfirmation">
+                    <button type="button" id="yesBtn" disabled>YES</button>
+                    <button type="button" id="noBtn" onclick="closePopUpPaymentWindow()">NO</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
 
     <script>
-        document.querySelector('.menu-button').addEventListener('click', function() {
+
+        
+        document.querySelector('.menuLogo').addEventListener('click', function() {
             const dropdownMenu = document.querySelector('.dropdown-menu');
             dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
         });
     
         window.onclick = function(event) {
-            if (!event.target.matches('.menu-button')) {
+            if (!event.target.matches('.menuLogo')) {
                 const dropdownMenu = document.querySelector('.dropdown-menu');
                 if (dropdownMenu.style.display === 'block') {
                     dropdownMenu.style.display = 'none';
@@ -295,41 +546,315 @@
             }
         };
 
-        // Sliding panel functionality
-        const slidingPanelAvail = document.getElementById('slidingPanelAvail');
-        const closeBtn = document.getElementById('closeBtn');
-        const roomInfo = document.getElementById('roomInfo');
+      
 
+
+        function updateGuestCount(inputId, isIncrement) {
+            let input = document.getElementById(inputId);
+            let value = parseInt(input.value);
+            if (!isNaN(value)) {
+                if (isIncrement) {
+                    if (value < 6) { // Ensure maximum value is 6
+                        input.value = value + 1;
+                    }
+                } else {
+                    if (value > 1) { // Ensure minimum value is 1
+                        input.value = value - 1;
+                    }
+                }
+            }
+        }
+
+        function validateInput(input) {
+            let value = parseInt(input.value);
+            if (isNaN(value) || value < 1) {
+                input.value = 1; // Set minimum value to 1
+            } else if (value > 6) {
+                input.value = 6; // Set maximum value to 6
+            }
+        }
+
+
+        function resetGuestCounts() {
+            document.getElementById('numberOfGuestAircon').value = 2;
+            document.getElementById('numberOfGuestNonAircon').value = 2;
+        }
+
+        // Sliding panel functionality
+        const slidingPanelAirconAvail = document.getElementById('slidingPanelAirconAvail');
+        const slidingPanelNonAirconAvail = document.getElementById('slidingPanelNonAirconAvail');
+        const closeBtnAircon = document.getElementById('closeBtnAircon');
+        const closeBtnNonAircon = document.getElementById('closeBtnNonAircon');
+        const closeBtnUnavail = document.getElementById('closeBtnUnavail');
+        const roomInfoAircon = document.getElementById('roomInfoAircon');
+        const roomInfoNonAircon = document.getElementById('roomInfoNonAircon');
+        const roomInfoUnavail = document.getElementById('roomInfoUnavail');
+    
         document.querySelectorAll('.room').forEach(roomButton => {
             roomButton.addEventListener('click', function() {
-                const roomId = this.dataset.room;
-                roomInfo.textContent = `ROOM ${roomId}`;
-                slidingPanelAvail.classList.add('show');
+                var roomId = this.dataset.room;
+    
+                if (['2', '4', '6', '8', '9', '10'].includes(roomId)) {
+                    // Room is aircon
+                    roomInfoNonAircon.textContent = `ROOM ${roomId}`;
+                    slidingPanelNonAirconAvail.classList.add('show');
+                    slidingPanelAirconAvail.classList.remove('show');
+                    resetGuestCounts();
+                } else {
+                    // Room is non-aircon
+                    roomInfoAircon.textContent = `ROOM ${roomId}`;
+                    slidingPanelAirconAvail.classList.add('show');
+                    slidingPanelNonAirconAvail.classList.remove('show');
+                    resetGuestCounts();
+                }
             });
         });
-
-        closeBtn.addEventListener('click', function() {
-            slidingPanelAvail.classList.remove('show');
+    
+        closeBtnAircon.addEventListener('click', function() {
+            slidingPanelAirconAvail.classList.remove('show');
+        });
+    
+        closeBtnNonAircon.addEventListener('click', function() {
+            slidingPanelNonAirconAvail.classList.remove('show');
         });
 
+        closeBtnUnavail.addEventListener('click', function() {
+            slidingPanelUnavail.classList.remove('show');
+        });
+    
         window.addEventListener('resize', function() {
-            const menuContainer = document.querySelector('.menu-container');
             const dropdownMenu = document.querySelector('.dropdown-menu');
             if (window.innerWidth > 600) {
                 dropdownMenu.style.display = 'none'; // Hide dropdown if screen is larger than 600px
             }
         });
-
+    
         function updateDateTime() {
             const dateTimeElement = document.getElementById('dateTime');
             const now = new Date();
             const formattedDateTime = now.toLocaleString();
             dateTimeElement.textContent = formattedDateTime;
         }
-
+    
         setInterval(updateDateTime, 1000);
         updateDateTime();
+
+        let popup = document.getElementById("popupPaymentWindow");
+        let selectedRoomId = null;
+        let countdownInterval = null;  // Variable to hold the countdown interval
+
+        function startCountdown(duration, roomButton) {
+            let endTime = Date.now() + duration * 60 * 60 * 1000;
+
+            function updateCountdown() {
+                let now = Date.now();
+                let timeLeft = endTime - now;
+
+                if (timeLeft <= 0) {
+                    clearInterval(countdownInterval);
+                    roomButton.querySelector('.availability-text').textContent = "Available";
+                    roomButton.style.backgroundColor = "green"; // Reset background to green
+                } else {
+                    let hours = Math.floor((timeLeft / (1000 * 60 * 60)) % 24);
+                    let minutes = Math.floor((timeLeft / (1000 * 60)) % 60);
+                    let seconds = Math.floor((timeLeft / 1000) % 60);
+
+                    roomButton.querySelector('.availability-text').textContent = 
+                        `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                }
+            }
+
+            updateCountdown(); // Initial call to avoid 1 second delay
+            countdownInterval = setInterval(updateCountdown, 1000); // Update every second
+        }
+
+        document.querySelectorAll('.room').forEach(roomButton => {
+            roomButton.addEventListener('click', function() {
+                selectedRoomId = this.dataset.room;
+                
+                // Check if the room button background color is red
+                if (this.style.backgroundColor === 'red') {
+                    // Show the unavailable panel with real-time details
+                    const roomType = ['2', '4', '6', '8', '9', '10'].includes(selectedRoomId) ? 'Air-conditioned Room' : 'Standard Room';
+                    const duration = document.getElementById('ConfirmationDuration').textContent.split(' ')[1]; // Extract duration from the confirmation window
+                    const now = new Date();
+
+                    // Format date and time for display
+                    const checkInDate = now.toLocaleDateString();
+                    const checkInTime = now.toLocaleTimeString();
+                    
+                    // Calculate check-out time
+                    const checkOut = new Date(now.getTime() + duration * 60 * 60 * 1000); // duration is in hours
+                    const checkOutDate = checkOut.toLocaleDateString();
+                    const checkOutTime = checkOut.toLocaleTimeString();
+
+
+                    document.getElementById('roomInfoUnavail').textContent = `ROOM ${selectedRoomId}`;
+                    document.getElementById('UnavailRoomType').textContent = roomType;
+                    document.getElementById('UnavailDuration').textContent = `${duration} HOURS`;
+                    document.getElementById('UnavailCheckInDate').textContent = checkInDate;
+                    document.getElementById('UnavailCheckInTime').textContent = checkInTime;
+                    document.getElementById('UnavailCheckOutDate').textContent = checkOutDate;
+                    document.getElementById('UnavailCheckOutTime').textContent = checkOutTime;
+
+                    document.getElementById('slidingPanelUnavail').classList.add('show');
+                    document.getElementById('slidingPanelAirconAvail').classList.remove('show');
+                    document.getElementById('slidingPanelNonAirconAvail').classList.remove('show');
+                } else {
+                    const isAircon = ['2', '4', '6', '8', '9', '10'].includes(selectedRoomId);
+
+                    if (isAircon) {
+                        document.getElementById('roomInfoAircon').textContent = `ROOM ${selectedRoomId}`;
+                        document.getElementById('slidingPanelAirconAvail').classList.add('show');
+                        document.getElementById('slidingPanelNonAirconAvail').classList.remove('show');
+                        document.getElementById('slidingPanelUnavail').classList.remove('show');
+                    } else {
+                        document.getElementById('roomInfoNonAircon').textContent = `ROOM ${selectedRoomId}`;
+                        document.getElementById('slidingPanelNonAirconAvail').classList.add('show');
+                        document.getElementById('slidingPanelAirconAvail').classList.remove('show');
+                        document.getElementById('slidingPanelUnavail').classList.remove('show');
+                    }
+                }
+            });
+        });
+
+        document.getElementById('extendHr').addEventListener('click', function() {
+            // Assuming extension adds 1 hour
+            const duration = parseInt(document.getElementById('UnavailExtension').textContent.split(' ')[0]) + 1;
+            const originalAmount = parseFloat(document.getElementById('UnavailTotalAmountPaid').textContent.split('PHP ')[1]);
+            const additionalFee = ['2', '4', '6', '8', '9', '10'].includes(selectedRoomId) ? ADDITIONAL_EXTENSIONFEE_AIRCON : ADDITIONAL_EXTENSIONFEE_NON_AIRCON;
+
+            // Update total amount paid
+            const newTotalAmount = originalAmount + additionalFee;
+            document.getElementById('UnavailExtension').textContent = `${duration} HOURS`;
+            document.getElementById('UnavailTotalAmountPaid').textContent = `PHP ${newTotalAmount.toFixed(2)}`;
+        });
+
+        document.getElementById('timeOut').addEventListener('click', function() {
+            // Stop the countdown timer if it exists
+            if (countdownInterval) {
+                clearInterval(countdownInterval);
+                countdownInterval = null;
+            }
+
+            // Find the button corresponding to the selected room and reset its background color
+            const roomButton = document.querySelector(`.room[data-room="${selectedRoomId}"]`);
+            if (roomButton) {
+                roomButton.style.backgroundColor = 'skyblue'; // Reset background
+                roomButton.style.color = 'black';
+                roomButton.querySelector('.availability-text').textContent = "Available";
+            }
+            
+            // Hide the sliding panel
+            document.getElementById('slidingPanelUnavail').classList.remove('show');
+        });
+
+
+        // Constants for additional fees
+        const ADDITIONAL_FEE_NON_AIRCON = 200;
+        const ADDITIONAL_FEE_AIRCON = 250;
+
+        const ADDITIONAL_EXTENSIONFEE_NON_AIRCON = 100;
+        const ADDITIONAL_EXTENSIONFEE_AIRCON = 150;
+
+        // Base rates for different durations
+        const BASE_RATE_NON_AIRCON = { 3: 300, 6: 500, 24: 1000 };
+        const BASE_RATE_AIRCON = { 3: 500, 6: 800, 24: 1500 };
+
+
+        function openPopUpPaymentWindow(roomType, duration, amount) {
+            const now = new Date();
+
+            // Format date and time for display
+            const checkInDate = now.toLocaleDateString();
+            const checkInTime = now.toLocaleTimeString();
+            
+            // Calculate check-out time
+            const checkOut = new Date(now.getTime() + duration * 60 * 60 * 1000); // duration is in hours
+            const checkOutDate = checkOut.toLocaleDateString();
+            const checkOutTime = checkOut.toLocaleTimeString();
+
+            const numberOfGuestsNonAircon = document.getElementById('numberOfGuestNonAircon').value;
+            const numberOfGuestsAircon = document.getElementById('numberOfGuestAircon').value;
+            const numberOfGuests = ['2', '4', '6', '8', '9', '10'].includes(selectedRoomId) ? numberOfGuestsAircon : numberOfGuestsNonAircon;
+
+            let numOfGuests;
+            let additionalFee;
+
+            if (roomType === 'Air-conditioned Room') {
+                numOfGuests = parseInt(document.getElementById('numberOfGuestAircon').value);
+                additionalFee = ADDITIONAL_FEE_AIRCON;
+            } else {
+                numOfGuests = parseInt(document.getElementById('numberOfGuestNonAircon').value);
+                additionalFee = ADDITIONAL_FEE_NON_AIRCON;
+            }
+
+            // Calculate additional fees
+            let extraGuests = Math.max(0, numOfGuests - 2);
+            let totalAdditionalFee = extraGuests * additionalFee;
+            
+            // Calculate total amount
+            let totalAmount = amount + totalAdditionalFee;
+
+
+            // Set confirmation window details
+            document.getElementById('ConfirmationroomNum').textContent = `Room Number: ${selectedRoomId}`;
+            document.getElementById('ConfirmationroomType').textContent = `Room Type: ${roomType}`;
+            document.getElementById('ConfirmationDuration').textContent = `Duration: ${duration} HOURS`;
+
+            document.getElementById('ConfirmationCheckInDate').textContent = `Date of Check-in: ${checkInDate}`;
+            document.getElementById('ConfirmationCheckInTime').textContent = `Time In: ${checkInTime}`;
+            document.getElementById('ConfirmationCheckOutDate').textContent = `Date of Check-Out: ${checkOutDate}`;
+            document.getElementById('ConfirmationCheckOutTime').textContent = `Time Out: ${checkOutTime}`;
+            document.getElementById('ConfirmationAmountPaid').textContent = `Room Rate: PHP ${amount}.00`;
+            document.getElementById('ConfirmationNumOfGuest').textContent = `Number of Guest: ${numberOfGuests}`;
+            document.getElementById('ConfirmationTotalAmountPaid').textContent = `Total Amount Paid: PHP ${totalAmount.toFixed(2)}`;
+
+            document.getElementById('UnavailNumOfGuest').textContent = `${numOfGuests}`;
+            document.getElementById('UnavailExtension').textContent = `${duration} HOURS`; // Assuming this is just the duration
+            document.getElementById('UnavailTotalAmountPaid').textContent = `PHP ${totalAmount.toFixed(2)}`;
+            
+            popup.classList.add("open-paymentConfirmation");
+        }
+
+        function closePopUpPaymentWindow() {
+            popup.classList.remove("open-paymentConfirmation");
+            paymentConfirmationChkbox.checked = false;
+            yesBtn.disabled = true;
+        }
+
+        document.getElementById('paymentConfirmationChkbox').addEventListener('change', function() {
+            const yesBtn = document.getElementById('yesBtn');
+            yesBtn.disabled = !this.checked;  // Enable the yes button only if the checkbox is checked
+        });
+
+        document.getElementById('yesBtn').addEventListener('click', function() {
+            paymentConfirmationChkbox.checked = false;
+            yesBtn.disabled = true;
+            if (selectedRoomId) {
+                // Find the button corresponding to the selected room and change its background color to red
+                const roomButton = document.querySelector(`.room[data-room="${selectedRoomId}"]`);
+                if (roomButton) {
+                    roomButton.style.backgroundColor = 'red';
+                    roomButton.style.color = 'white';
+
+                    // Start the countdown timer
+                    startCountdown(parseInt(document.getElementById('ConfirmationDuration').textContent.split(' ')[1]), roomButton);
+                }
+
+                // Close the popup after confirming
+                closePopUpPaymentWindow();
+
+                // Automatically slide back the sliding panel
+                if (['2', '4', '6', '8', '9', '10'].includes(selectedRoomId)) {
+                    document.getElementById('slidingPanelAirconAvail').classList.remove('show');
+                } else {
+                    document.getElementById('slidingPanelNonAirconAvail').classList.remove('show');
+                }
+            }
+        });
     </script>
+    
     <script src="https://kit.fontawesome.com/b629388bc1.js" crossorigin="anonymous"></script>
 </body>
 </html>
