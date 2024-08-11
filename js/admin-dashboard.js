@@ -105,63 +105,81 @@ let popup = document.getElementById("popupPaymentWindow");
 let selectedRoomId = null;
 let countdownInterval = null;  // Variable to hold the countdown interval
 
-function startCountdown(duration, roomButton) {
-    let endTime = Date.now() + duration * 60 * 60 * 1000;
-
-    function updateCountdown() {
-        let now = Date.now();
-        let timeLeft = endTime - now;
-
-        if (timeLeft <= 0) {
-            clearInterval(countdownInterval);
-            roomButton.querySelector('.availability-text').textContent = "Available";
-            roomButton.style.backgroundColor = "green"; // Reset background to green
-        } else {
-            let hours = Math.floor((timeLeft / (1000 * 60 * 60)) % 24);
-            let minutes = Math.floor((timeLeft / (1000 * 60)) % 60);
-            let seconds = Math.floor((timeLeft / 1000) % 60);
-
-            roomButton.querySelector('.availability-text').textContent = 
-                `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-        }
+function changeAvailability(roomButton) {
+    if (roomButton.style.backgroundColor === "skyblue") {
+        roomButton.querySelector('.availability-text').textContent = "Available";
+        roomButton.style.backgroundColor = "skyblue"; // Reset background to sky blue
+        roomButton.style.color = "black"; 
+    } else {
+        roomButton.querySelector('.availability-text').textContent = "Occupied";
+        roomButton.style.color = "white"; 
     }
-
-    updateCountdown(); // Initial call to avoid 1 second delay
-    countdownInterval = setInterval(updateCountdown, 1000); // Update every second
 }
+
+// document.querySelectorAll('.room').forEach(roomButton => {
+//     roomButton.addEventListener('click', function() {
+//         selectedRoomId = this.dataset.room;
+        
+//         // Check if the room button background color is red
+//         if (this.style.backgroundColor === 'red') {
+//             // Show the unavailable panel with real-time details
+//             const roomType = ['2', '4', '6', '8', '9', '10'].includes(selectedRoomId) ? 'Air-conditioned Room' : 'Standard Room';
+//             const duration = document.getElementById('ConfirmationDuration').textContent.split(' ')[1]; // Extract duration from the confirmation window
+//             const now = new Date();
+
+//             // Format date and time for display
+//             const checkInDate = now.toLocaleDateString();
+//             const checkInTime = now.toLocaleTimeString();
+            
+//             // Calculate check-out time
+//             const checkOut = new Date(now.getTime() + duration * 60 * 60 * 1000); // duration is in hours
+//             const checkOutDate = checkOut.toLocaleDateString();
+//             const checkOutTime = checkOut.toLocaleTimeString();
+            
+
+//             document.getElementById('roomInfoUnavail').textContent = `ROOM ${selectedRoomId}`;
+//             document.getElementById('UnavailRoomType').textContent = roomType;
+//             document.getElementById('UnavailDuration').textContent = `${duration} HOURS`;
+//             document.getElementById('UnavailCheckInDate').textContent = checkInDate;
+//             document.getElementById('UnavailCheckInTime').textContent = checkInTime;
+//             document.getElementById('UnavailCheckOutDate').textContent = checkOutDate;
+//             document.getElementById('UnavailCheckOutTime').textContent = checkOutTime;
+
+//             document.getElementById('slidingPanelUnavail').classList.add('show');
+//             document.getElementById('slidingPanelAirconAvail').classList.remove('show');
+//             document.getElementById('slidingPanelNonAirconAvail').classList.remove('show');
+//         } else {
+//             const isAircon = ['2', '4', '6', '8', '9', '10'].includes(selectedRoomId);
+
+//             if (isAircon) {
+//                 document.getElementById('roomInfoAircon').textContent = `ROOM ${selectedRoomId}`;
+//                 document.getElementById('slidingPanelAirconAvail').classList.add('show');
+//                 document.getElementById('slidingPanelNonAirconAvail').classList.remove('show');
+//                 document.getElementById('slidingPanelUnavail').classList.remove('show');
+//             } else {
+//                 document.getElementById('roomInfoNonAircon').textContent = `ROOM ${selectedRoomId}`;
+//                 document.getElementById('slidingPanelNonAirconAvail').classList.add('show');
+//                 document.getElementById('slidingPanelAirconAvail').classList.remove('show');
+//                 document.getElementById('slidingPanelUnavail').classList.remove('show');
+//             }
+//         }
+//     });
+// });
 
 document.querySelectorAll('.room').forEach(roomButton => {
     roomButton.addEventListener('click', function() {
         selectedRoomId = this.dataset.room;
         
         // Check if the room button background color is red
-        if (this.style.backgroundColor === 'red') {
-            // Show the unavailable panel with real-time details
-            const roomType = ['2', '4', '6', '8', '9', '10'].includes(selectedRoomId) ? 'Air-conditioned Room' : 'Standard Room';
-            const duration = document.getElementById('ConfirmationDuration').textContent.split(' ')[1]; // Extract duration from the confirmation window
-            const now = new Date();
-
-            // Format date and time for display
-            const checkInDate = now.toLocaleDateString();
-            const checkInTime = now.toLocaleTimeString();
-            
-            // Calculate check-out time
-            const checkOut = new Date(now.getTime() + duration * 60 * 60 * 1000); // duration is in hours
-            const checkOutDate = checkOut.toLocaleDateString();
-            const checkOutTime = checkOut.toLocaleTimeString();
-
-
-            document.getElementById('roomInfoUnavail').textContent = `ROOM ${selectedRoomId}`;
-            document.getElementById('UnavailRoomType').textContent = roomType;
-            document.getElementById('UnavailDuration').textContent = `${duration} HOURS`;
-            document.getElementById('UnavailCheckInDate').textContent = checkInDate;
-            document.getElementById('UnavailCheckInTime').textContent = checkInTime;
-            document.getElementById('UnavailCheckOutDate').textContent = checkOutDate;
-            document.getElementById('UnavailCheckOutTime').textContent = checkOutTime;
-
+        if (this.style.backgroundColor === 'red') {                
             document.getElementById('slidingPanelUnavail').classList.add('show');
             document.getElementById('slidingPanelAirconAvail').classList.remove('show');
             document.getElementById('slidingPanelNonAirconAvail').classList.remove('show');
+            // Fetch the details from Firebase and update the panel
+            fetchRoomData(selectedRoomId).then(() => {
+                document.getElementById('roomInfoUnavail').textContent = `ROOM ${selectedRoomId}`;
+            });
+
         } else {
             const isAircon = ['2', '4', '6', '8', '9', '10'].includes(selectedRoomId);
 
@@ -179,6 +197,7 @@ document.querySelectorAll('.room').forEach(roomButton => {
         }
     });
 });
+
 
 document.getElementById('extendHr').addEventListener('click', function() {
     // Assuming extension adds 1 hour
