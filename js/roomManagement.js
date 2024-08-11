@@ -1,5 +1,4 @@
-import { saveCheckInCheckOutData, initializeRoom, getRoomState, saveRoomState } from '/dbcommand.js
-'; // Adjust the path accordingly
+import { saveCheckInCheckOutData, initializeRoom, getRoomState, saveRoomState } from '/dbcommand.js'; // Adjust the path accordingly
 
     
 document.getElementById('yesBtn').addEventListener('click', function() {
