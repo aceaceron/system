@@ -2,7 +2,7 @@
     font-family: 'Footlight MT Light';
 }
 .bg {
-    background-image: url("/img/bg01.jpg");
+    background-image: url("../img/bg01.jpg");
     width: 100%;
     height: 100%;
     background-size: cover; 
