@@ -1,6 +1,5 @@
 import { saveCheckInCheckOutData, initializeRoom, getRoomState, saveRoomState } from './dbcommand.js'; // Adjust the path accordingly
 
-    
 document.getElementById('yesBtn').addEventListener('click', function() {
     document.getElementById('paymentConfirmationChkbox').checked = false;
     document.getElementById('yesBtn').disabled = true;
@@ -42,6 +41,7 @@ document.getElementById('yesBtn').addEventListener('click', function() {
         }
     }
 });
+
 document.addEventListener('DOMContentLoaded', function () {
     const roomElement = document.querySelectorAll('.room');
     // Iterate over each room element
@@ -51,4 +51,5 @@ document.addEventListener('DOMContentLoaded', function () {
         initializeRoom(roomElement, roomId);
     });
 });
+
 console.log('External script loaded');
