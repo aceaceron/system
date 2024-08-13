@@ -80,7 +80,7 @@ export async function saveCheckInCheckOutData(selectedRoomId, duration, checkInD
 
 window.fetchRoomData = async function(selectedRoomId) {
     try {
-        const roomRef = ref(db, `currentCheckIn`); 
+        const roomRef = ref(db, 'currentCheckIn'); 
         const snapshot = await get(roomRef);
 
         if (snapshot.exists()) {
@@ -88,7 +88,6 @@ window.fetchRoomData = async function(selectedRoomId) {
             let foundEntry = null;
             let uniqueId = null;
 
-            // Iterate over each entry to find the one with the matching room ID
             for (let key in data) {
                 if (data.hasOwnProperty(key) && data[key].selectedRoomId === selectedRoomId) {
                     foundEntry = data[key];
@@ -100,10 +99,10 @@ window.fetchRoomData = async function(selectedRoomId) {
                 const { duration, checkInDate, checkInTime, checkOutDate, checkOutTime, numberOfGuests, totalAmountPaid } = foundEntry;
 
                 const roomType = ['2', '4', '6', '8', '9', '10'].includes(selectedRoomId) ? 'Air-conditioned Room' : 'Standard Room';
-                document.getElementById('roomInfoUnavail').textContent = `ROOM ${selectedRoomId}`;
+                document.getElementById('roomInfoUnavail').textContent = 'ROOM ' + selectedRoomId;
                 document.getElementById('UnavailRoomType').textContent = roomType;
                 document.getElementById('UnavailRoomNum').textContent = selectedRoomId;
-                document.getElementById('UnavailDuration').textContent = `${duration} HOURS`;
+                document.getElementById('UnavailDuration').textContent = duration + ' HOURS';
                 document.getElementById('UnavailCheckInDate').textContent = checkInDate;
                 document.getElementById('UnavailCheckInTime').textContent = checkInTime;
                 document.getElementById('UnavailCheckOutDate').textContent = checkOutDate;
@@ -111,20 +110,50 @@ window.fetchRoomData = async function(selectedRoomId) {
                 document.getElementById('UnavailNumOfGuest').textContent = numberOfGuests;
                 document.getElementById('UnavailTotalAmountPaid').textContent = 'PHP ' + totalAmountPaid + '.00';
 
-                // Display the unique ID in the panel
                 document.getElementById('UnavailUniqueId').textContent = uniqueId;
 
-                document.getElementById('slidingPanelUnavail').classList.add('show');
-                document.getElementById('slidingPanelAirconAvail').classList.remove('show');
-                document.getElementById('slidingPanelNonAirconAvail').classList.remove('show');
+                const currentTime = new Date().getTime();
+                const checkoutDateTime = new Date(`${checkOutDate} ${checkOutTime}`).getTime();
+                let remainingTime = checkoutDateTime - currentTime;
+
+                // Find the button for the selected room
+                const roomButton = document.querySelector(`#room${selectedRoomId}`);
+                if (roomButton) {
+                    // Pass uniqueId and selectedRoomId to startCountdown
+                    startCountdown(remainingTime, roomButton, uniqueId, selectedRoomId);
+                }
             } else {
-            console.log('No data available for the selected room.');
+                console.log('No data available for the selected room.');
             }
         }
     } catch (error) {
         console.error('Error fetching room details:', error);
     }
 }
+
+function startCountdown(duration, roomButton, uniqueId, roomId) {
+    const availabilityText = roomButton.querySelector('.availability-text');
+
+    const countdown = setInterval(() => {
+        let hours = Math.floor((duration % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        let minutes = Math.floor((duration % (1000 * 60 * 60)) / (1000 * 60));
+        let seconds = Math.floor((duration % (1000 * 60)) / 1000);
+
+        availabilityText.textContent = `${hours}h ${minutes}m ${seconds}s`;
+
+        if (duration <= 0) {
+            clearInterval(countdown);
+            roomButton.style.backgroundColor = 'skyblue';
+            roomButton.style.color = 'black';
+            roomButton.querySelector('.availability-text').textContent = "Available";
+            moveDataToPastCheckIn(uniqueId);
+            saveRoomState(roomId, true); // 'true' indicates the room is now available
+        } else {
+            duration -= 1000;
+        }
+    }, 1000);
+}
+
 
 async function moveDataToPastCheckIn(uniqueId) {
     try {
