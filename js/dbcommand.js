@@ -1,6 +1,6 @@
 // Import the necessary Firebase functions
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
+import { getDatabase, ref, set, get, remove } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
 
 // Firebase configuration object
 const firebaseConfig = {
@@ -126,56 +126,57 @@ window.fetchRoomData = async function(selectedRoomId) {
     }
 }
 
-// // Function to save room state (availability and timer start time) to Firebase
-// async function saveRoomState(roomId, isAvailable) {
-//     try {
-//         const roomRef = ref(db, `rooms/${roomId}`);
-//         await set(roomRef, {
-//             isAvailable
-//         });
-//         console.log('Room state saved:', roomId);
-//     } catch (error) {
-//         console.error('Error saving room state:', error);
-//     }
-// }
+async function moveDataToPastCheckIn(uniqueId) {
+    try {
+        // Reference to the current check-in/check-out data using the unique ID
+        const checkInCheckOutRef = ref(db, `checkin-checkout/${uniqueId}`);
+        
+        // Get the data
+        const checkInCheckOutSnapshot = await get(checkInCheckOutRef);
+        const checkInCheckOutData = checkInCheckOutSnapshot.val();
 
-// // Function to retrieve room state from Firebase
-// export async function getRoomState(roomId) {
-//     try {
-//         const roomRef = ref(db, `rooms/${roomId}`);
-//         const snapshot = await get(roomRef);
-//         if (snapshot.exists()) {
-//             return snapshot.val();
-//         } else {
-//             console.log('No room state data available');
-//             return null;
-//         }
-//     } catch (error) {
-//         console.error('Error retrieving room state:', error);
-//         return null;
-//     }
-// }
+        if (checkInCheckOutData) {
+            // Save the data to the pastCheckIn table using the same unique ID
+            const pastCheckInRef = ref(db, `pastCheckIn/${uniqueId}`);
+            
+            // Save the data to the pastCheckIn table
+            await set(pastCheckInRef, checkInCheckOutData);
+            console.log(`Data moved to pastCheckIn with ID: ${uniqueId}`);
+            
+            // Remove the old data from checkin-checkout
+            await remove(checkInCheckOutRef);
+            console.log(`Data removed from checkin-checkout with ID: ${uniqueId}`);
+        } else {
+            console.log(`No check-in/check-out data found for ID ${uniqueId}`);
+        }
+    } catch (error) {
+        console.error('Error moving data to pastCheckIn:', error);
+    }
+}
 
-// // Function to initialize room state and timer
-// export async function initializeRoom(roomElement, roomId) {
-//     const roomState = await getRoomState(roomId);
-//     if (roomState && !roomState.isAvailable) {
-//         roomElement.style.backgroundColor = 'red';
-//         roomElement.style.color = 'white';
-//         changeAvailability(roomElement);
-//     }
+// Example usage in the 'timeOut' button click event
+document.getElementById('timeOut').addEventListener('click', async function() {
+    const uniqueId = document.getElementById('UnavailUniqueId').textContent; // Fetch the displayed unique ID
+    
+    // Reset the room's UI
+    const roomButton = document.querySelector(`.room[data-room="${selectedRoomId}"]`);
+    if (roomButton) {
+        roomButton.style.backgroundColor = 'skyblue';
+        roomButton.style.color = 'black';
+        roomButton.querySelector('.availability-text').textContent = "Available";
+    }
+    
+    // Update the room's availability in Firebase
+    const roomRef = ref(db, `rooms/${selectedRoomId}/isAvailable`);
+    await set(roomRef, true);
+    console.log(`Room ${selectedRoomId} availability updated to true`);
 
-//     roomElement.addEventListener('click', async function() {
-//         // Save the room state to Firebase
-//         await saveRoomState(roomId, false);
+    // Move the data to the "pastCheckIn" table
+    await moveDataToPastCheckIn(uniqueId);
 
-//         // Update the UI
-//         roomElement.style.backgroundColor = 'red';
-//         roomElement.style.color = 'white';
-//         changeAvailability(roomElement);
-//     });
-// }
-
+    // Hide the sliding panel
+    document.getElementById('slidingPanelUnavail').classList.remove('show');
+});
 
 // Function to save room state (availability) to Firebase
 export async function saveRoomState(roomId, isAvailable) {
