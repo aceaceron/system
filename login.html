@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Log In | La Casa de Espeso</title>
+    <link rel="icon" href="img/logo.png" type="image/png">
     
     <style>
         * {
@@ -111,9 +112,9 @@
             // Dummy authentication
             // You should replace this with actual authentication logic
             if (username === 'admin' && password === 'adminpass') {
-                window.location.href = 'admin-dashboard.html'; // Redirect to admin dashboard
+                window.location.href = 'admin.html'; // Redirect to admin dashboard
             } else if (username === 'employee' && password === 'employeepass') {
-                window.location.href = 'employee-dashboard.html'; // Redirect to employee dashboard
+                window.location.href = 'employee.html'; // Redirect to employee dashboard
             } else {
                 document.getElementById('message').textContent = 'Invalid username or password';
             }
