@@ -299,9 +299,11 @@ document.getElementById('timeOut').addEventListener('click', async function() {
     if (confirmed) {
         // Proceed if user pressed OK
         const uniqueId = document.getElementById('UnavailUniqueId').textContent; // Fetch the displayed unique ID
-        
+        clearInterval(countdown);
+
         // Reset the room's UI
         const roomButton = document.querySelector(`.room[data-room="${selectedRoomId}"]`);
+
         if (roomButton) {
             roomButton.style.backgroundColor = 'skyblue';
             roomButton.style.color = 'black';
