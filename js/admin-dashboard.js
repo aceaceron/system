@@ -211,25 +211,6 @@ document.getElementById('extendHr').addEventListener('click', function() {
     document.getElementById('UnavailTotalAmountPaid').textContent = `PHP ${newTotalAmount.toFixed(2)}`;
 });
 
-document.getElementById('timeOut').addEventListener('click', function() {
-    // Stop the countdown timer if it exists
-    if (countdownInterval) {
-        clearInterval(countdownInterval);
-        countdownInterval = null;
-    }
-
-    // Find the button corresponding to the selected room and reset its background color
-    const roomButton = document.querySelector(`.room[data-room="${selectedRoomId}"]`);
-    if (roomButton) {
-        roomButton.style.backgroundColor = 'skyblue'; // Reset background
-        roomButton.style.color = 'black';
-        roomButton.querySelector('.availability-text').textContent = "Available";
-    }
-    
-    // Hide the sliding panel
-    document.getElementById('slidingPanelUnavail').classList.remove('show');
-});
-
 // Constants for additional fees
 const ADDITIONAL_FEE_NON_AIRCON = 200;
 const ADDITIONAL_FEE_AIRCON = 250;
