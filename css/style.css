@@ -420,7 +420,7 @@ a:hover {
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: url('system/img/bg01.jpg'); /* Path to your background image */
+    background-image: url('../img/bg01.jpg'); /* Path to your background image */
     background-size: cover; /* Scale the image to cover the container */
     background-position: center; /* Center the image in the container */
     filter: blur(5px); /* Blur effect */
