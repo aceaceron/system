@@ -232,4 +232,113 @@ export async function initializeRoom(roomElement, roomId) {
     });
 }
 
+Constants for additional fees
+const ADDITIONAL_EXTENSIONFEE_NON_AIRCON = 100;
+const ADDITIONAL_EXTENSIONFEE_AIRCON = 150;
+
+document.getElementById('extendHr').addEventListener('click', async function() {
+    try {
+        // Show confirmation dialog to the user
+        const confirmed = confirm('Are you sure you want to extend the check-out time by one hour?');
+
+        if (!confirmed) {
+            console.log('Extension canceled by user.');
+            return; // Exit if the user cancels
+        }
+
+        const uniqueIdElement = document.getElementById('UnavailUniqueId');
+        const roomNumElement = document.getElementById('UnavailRoomNum');
+
+        // Check if required DOM elements are present
+        if (!uniqueIdElement || !roomNumElement) {
+            console.error('Required DOM elements not found.');
+            return;
+        }
+
+        // Retrieve unique ID and selected room number
+        const uniqueId = uniqueIdElement.textContent.trim();
+        const selectedRoomId = roomNumElement.textContent.trim();
+
+        if (!uniqueId || !selectedRoomId) {
+            console.error('Unique ID or Room Number is missing.');
+            return;
+        }
+
+        // Determine the additional fee based on the room type
+        const additionalFee = ['2', '4', '6', '8', '9', '10'].includes(selectedRoomId) ? ADDITIONAL_EXTENSIONFEE_AIRCON : ADDITIONAL_EXTENSIONFEE_NON_AIRCON;
+
+        // Reference to the current booking data in Firebase
+        const bookingRef = ref(db, `currentCheckIn/${uniqueId}`);
+        const snapshot = await get(bookingRef);
+
+        if (!snapshot.exists()) {
+            console.error('No data available for the given unique ID.');
+            return;
+        }
+
+        const bookingData = snapshot.val();
+
+        // Extract and format the check-out date and time
+        const checkOutDateStr = bookingData.checkOutDate; // Format should be MM/DD/YYYY
+        const checkOutTimeStr = bookingData.checkOutTime; // Format should be HH:MM:SS AM/PM
+
+        // Create a Date object with the correct format
+        const [month, day, year] = checkOutDateStr.split('/'); // MM/DD/YYYY
+        const [time, modifier] = checkOutTimeStr.split(' '); // HH:MM:SS AM/PM
+        const [hours, minutes, seconds] = time.split(':'); // HH:MM:SS
+
+        // Convert to 24-hour format if necessary
+        let hours24 = parseInt(hours, 10);
+        if (modifier === 'PM' && hours24 < 12) hours24 += 12;
+        if (modifier === 'AM' && hours24 === 12) hours24 = 0;
+
+        // Construct the ISO 8601 date-time string
+        const isoDateTimeStr = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}T${hours24.toString().padStart(2, '0')}:${minutes}:${seconds}`;
+        
+        // Log the formatted ISO date-time string for debugging
+        console.log('Combining check-out date and time:', isoDateTimeStr);
+
+        const checkOutDateTime = new Date(isoDateTimeStr);
+
+        // Check if the Date object is valid
+        if (isNaN(checkOutDateTime.getTime())) {
+            console.error('Invalid check-out datetime format:', isoDateTimeStr);
+            return;
+        }
+
+        // Add one hour to the check-out time
+        checkOutDateTime.setHours(checkOutDateTime.getHours() + 1);
+        
+        // Convert the updated Date object to ISO string and local date/time strings
+        const newCheckoutTimeISO = checkOutDateTime.toISOString();
+        const newCheckoutDate = checkOutDateTime.toLocaleDateString();
+        const newCheckoutTime = checkOutDateTime.toLocaleTimeString();
+
+        // Log the new values for debugging
+        console.log('New check-out date:', newCheckoutDate);
+        console.log('New check-out time:', newCheckoutTime);
+
+        // Update the total amount paid
+        const originalAmount = parseFloat(document.getElementById('UnavailTotalAmountPaid').textContent.split('PHP ')[1]);
+        const newTotalAmount = originalAmount + additionalFee;
+        document.getElementById('UnavailTotalAmountPaid').textContent = `PHP ${newTotalAmount.toFixed(2)}`;
+
+        // Update Firebase with the new checkout time and total amount
+        await set(bookingRef, {
+            ...bookingData,
+            checkOutDate: newCheckoutDate,
+            checkOutTime: newCheckoutTime,
+            totalAmountPaid: newTotalAmount
+        });
+
+        // Update the UI with the new check-out date and time
+        document.getElementById('UnavailCheckOutDate').textContent = newCheckoutDate;
+        document.getElementById('UnavailCheckOutTime').textContent = newCheckoutTime;
+
+        console.log('Booking extended successfully.');
+    } catch (error) {
+        console.error('Error extending booking:', error);
+    }
+});
+
 console.log('Firebase script loaded and ready');
