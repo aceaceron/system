@@ -199,23 +199,9 @@ document.querySelectorAll('.room').forEach(roomButton => {
 });
 
 
-document.getElementById('extendHr').addEventListener('click', function() {
-    // Assuming extension adds 1 hour
-    const duration = parseInt(document.getElementById('UnavailExtension').textContent.split(' ')[0]) + 1;
-    const originalAmount = parseFloat(document.getElementById('UnavailTotalAmountPaid').textContent.split('PHP ')[1]);
-    const additionalFee = ['2', '4', '6', '8', '9', '10'].includes(selectedRoomId) ? ADDITIONAL_EXTENSIONFEE_AIRCON : ADDITIONAL_EXTENSIONFEE_NON_AIRCON;
-
-    // Update total amount paid
-    const newTotalAmount = originalAmount + additionalFee;
-    document.getElementById('UnavailExtension').textContent = `${duration} HOURS`;
-    document.getElementById('UnavailTotalAmountPaid').textContent = `PHP ${newTotalAmount.toFixed(2)}`;
-});
-
 // Constants for additional fees
 const ADDITIONAL_FEE_NON_AIRCON = 200;
 const ADDITIONAL_FEE_AIRCON = 250;
-const ADDITIONAL_EXTENSIONFEE_NON_AIRCON = 100;
-const ADDITIONAL_EXTENSIONFEE_AIRCON = 150;
 
 // Base rates for different durations
 const BASE_RATE_NON_AIRCON = { 3: 300, 6: 500, 24: 1000 };
