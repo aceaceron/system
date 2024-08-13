@@ -1,5 +1,6 @@
 import { saveCheckInCheckOutData, initializeRoom, getRoomState, saveRoomState } from './dbcommand.js'; // Adjust the path accordingly
 
+    
 document.getElementById('yesBtn').addEventListener('click', function() {
     document.getElementById('paymentConfirmationChkbox').checked = false;
     document.getElementById('yesBtn').disabled = true;
@@ -26,6 +27,8 @@ document.getElementById('yesBtn').addEventListener('click', function() {
             // Save room state to Firebase
             saveRoomState(selectedRoomId, false);
 
+            fetchRoomData(selectedRoomId);
+
             // Change availability of the room
             changeAvailability(roomButton);
 
@@ -38,6 +41,7 @@ document.getElementById('yesBtn').addEventListener('click', function() {
             } else {
                 document.getElementById('slidingPanelNonAirconAvail').classList.remove('show');
             }
+            fetchRoomData(selectedRoomId);
         }
     }
 });
@@ -49,6 +53,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // Get the room ID from the data attribute
         const roomId = roomElement.dataset.room;
         initializeRoom(roomElement, roomId);
+        fetchRoomData(roomId);
     });
 });
 
