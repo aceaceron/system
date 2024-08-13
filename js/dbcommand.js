@@ -232,7 +232,7 @@ export async function initializeRoom(roomElement, roomId) {
     });
 }
 
-Constants for additional fees
+//Constants for additional fees
 const ADDITIONAL_EXTENSIONFEE_NON_AIRCON = 100;
 const ADDITIONAL_EXTENSIONFEE_AIRCON = 150;
 
