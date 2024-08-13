@@ -28,7 +28,7 @@ function formatDate() {
 
 // Function to get the next sequential number for the date key
 async function getNextSequentialNumber(dateKey) {
-    const countRef = ref(db, `checkin-checkout-count/${dateKey}`);
+    const countRef = ref(db, `checkIn-count/${dateKey}`);
 
     try {
         const snapshot = await get(countRef);
@@ -58,7 +58,7 @@ async function generateUniqueId() {
 export async function saveCheckInCheckOutData(selectedRoomId, duration, checkInDate, checkInTime, checkOutDate, checkOutTime, numberOfGuests, totalAmountPaid) {
     try {
         const uniqueId = await generateUniqueId();
-        const newCheckInCheckOutRef = ref(db, `checkin-checkout/${uniqueId}`);
+        const newCheckInCheckOutRef = ref(db, `currentCheckIn/${uniqueId}`);
 
         const checkInCheckOutData = {
             selectedRoomId,
@@ -80,7 +80,7 @@ export async function saveCheckInCheckOutData(selectedRoomId, duration, checkInD
 
 window.fetchRoomData = async function(selectedRoomId) {
     try {
-        const roomRef = ref(db, `checkin-checkout`); 
+        const roomRef = ref(db, `currentCheckIn`); 
         const snapshot = await get(roomRef);
 
         if (snapshot.exists()) {
@@ -102,6 +102,7 @@ window.fetchRoomData = async function(selectedRoomId) {
                 const roomType = ['2', '4', '6', '8', '9', '10'].includes(selectedRoomId) ? 'Air-conditioned Room' : 'Standard Room';
                 document.getElementById('roomInfoUnavail').textContent = `ROOM ${selectedRoomId}`;
                 document.getElementById('UnavailRoomType').textContent = roomType;
+                document.getElementById('UnavailRoomNum').textContent = selectedRoomId;
                 document.getElementById('UnavailDuration').textContent = `${duration} HOURS`;
                 document.getElementById('UnavailCheckInDate').textContent = checkInDate;
                 document.getElementById('UnavailCheckInTime').textContent = checkInTime;
@@ -109,7 +110,6 @@ window.fetchRoomData = async function(selectedRoomId) {
                 document.getElementById('UnavailCheckOutTime').textContent = checkOutTime;
                 document.getElementById('UnavailNumOfGuest').textContent = numberOfGuests;
                 document.getElementById('UnavailTotalAmountPaid').textContent = 'PHP ' + totalAmountPaid + '.00';
-
 
                 // Display the unique ID in the panel
                 document.getElementById('UnavailUniqueId').textContent = uniqueId;
@@ -129,7 +129,7 @@ window.fetchRoomData = async function(selectedRoomId) {
 async function moveDataToPastCheckIn(uniqueId) {
     try {
         // Reference to the current check-in/check-out data using the unique ID
-        const checkInCheckOutRef = ref(db, `checkin-checkout/${uniqueId}`);
+        const checkInCheckOutRef = ref(db, `currentCheckIn/${uniqueId}`);
         
         // Get the data
         const checkInCheckOutSnapshot = await get(checkInCheckOutRef);
@@ -143,9 +143,9 @@ async function moveDataToPastCheckIn(uniqueId) {
             await set(pastCheckInRef, checkInCheckOutData);
             console.log(`Data moved to pastCheckIn with ID: ${uniqueId}`);
             
-            // Remove the old data from checkin-checkout
+            // Remove the old data from currentCheckIn
             await remove(checkInCheckOutRef);
-            console.log(`Data removed from checkin-checkout with ID: ${uniqueId}`);
+            console.log(`Data removed from currentCheckIn with ID: ${uniqueId}`);
         } else {
             console.log(`No check-in/check-out data found for ID ${uniqueId}`);
         }
@@ -153,96 +153,17 @@ async function moveDataToPastCheckIn(uniqueId) {
         console.error('Error moving data to pastCheckIn:', error);
     }
 }
-
-// Example usage in the 'timeOut' button click event
-document.getElementById('timeOut').addEventListener('click', async function() {
-    const uniqueId = document.getElementById('UnavailUniqueId').textContent; // Fetch the displayed unique ID
-    
-    // Reset the room's UI
-    const roomButton = document.querySelector(`.room[data-room="${selectedRoomId}"]`);
-    if (roomButton) {
-        roomButton.style.backgroundColor = 'skyblue';
-        roomButton.style.color = 'black';
-        roomButton.querySelector('.availability-text').textContent = "Available";
-    }
-    
-    // Update the room's availability in Firebase
-    const roomRef = ref(db, `rooms/${selectedRoomId}/isAvailable`);
-    await set(roomRef, true);
-    console.log(`Room ${selectedRoomId} availability updated to true`);
-
-    // Move the data to the "pastCheckIn" table
-    await moveDataToPastCheckIn(uniqueId);
-
-    // Hide the sliding panel
-    document.getElementById('slidingPanelUnavail').classList.remove('show');
-});
-
-// Function to save room state (availability) to Firebase
-export async function saveRoomState(roomId, isAvailable) {
-    try {
-        const roomRef = ref(db, `rooms/${roomId}`);
-        await set(roomRef, {
-            isAvailable
-        });
-        console.log('Room state saved:', roomId, 'Availability:', isAvailable);
-    } catch (error) {
-        console.error('Error saving room state:', error);
-    }
-}
-
-// Function to retrieve room state from Firebase
-export async function getRoomState(roomId) {
-    try {
-        const roomRef = ref(db, `rooms/${roomId}`);
-        const snapshot = await get(roomRef);
-        if (snapshot.exists()) {
-            return snapshot.val();
-        } else {
-            console.log('No room state data available');
-            return null;
-        }
-    } catch (error) {
-        console.error('Error retrieving room state:', error);
-        return null;
-    }
-}
-
-// Function to initialize room with Firebase data
-export async function initializeRoom(roomElement, roomId) {
-    const roomState = await getRoomState(roomId);
-    if (roomState && !roomState.isAvailable) {
-        roomElement.style.backgroundColor = 'red';
-        roomElement.style.color = 'white';
-        changeAvailability(roomElement);
-    }
-
-    roomElement.addEventListener('click', async function() {
-        if (window.yesBtnPressed) {
-            // Save the room state to Firebase
-            await saveRoomState(roomId, false);
-
-            // Update the UI
-            roomElement.style.backgroundColor = 'red';
-            roomElement.style.color = 'white';
-            changeAvailability(roomElement);
-        } else {
-            console.log('Room state not saved as #yesBtn was not pressed');
-        }
-    });
-}
-
-//Constants for additional fees
+// Constants for additional fees
 const ADDITIONAL_EXTENSIONFEE_NON_AIRCON = 100;
 const ADDITIONAL_EXTENSIONFEE_AIRCON = 150;
 
 document.getElementById('extendHr').addEventListener('click', async function() {
     try {
         // Show confirmation dialog to the user
-        const confirmed = confirm('Are you sure you want to extend the check-out time by one hour?');
+        const confirmed = confirm('Are you sure you that the guest paid to extend the check-out time by one hour?');
 
         if (!confirmed) {
-            console.log('Extension canceled by user.');
+            console.log('Extension canceled.');
             return; // Exit if the user cancels
         }
 
@@ -340,5 +261,92 @@ document.getElementById('extendHr').addEventListener('click', async function() {
         console.error('Error extending booking:', error);
     }
 });
+
+
+document.getElementById('timeOut').addEventListener('click', async function() {
+    // Confirm action with the user
+    const confirmed = confirm('Are you sure that the guest checked out the room? This action cannot be undone.');
+
+    if (confirmed) {
+        // Proceed if user pressed OK
+        const uniqueId = document.getElementById('UnavailUniqueId').textContent; // Fetch the displayed unique ID
+        
+        // Reset the room's UI
+        const roomButton = document.querySelector(`.room[data-room="${selectedRoomId}"]`);
+        if (roomButton) {
+            roomButton.style.backgroundColor = 'skyblue';
+            roomButton.style.color = 'black';
+            roomButton.querySelector('.availability-text').textContent = "Available";
+        }
+        
+        try {
+            // Update the room's availability in Firebase
+            const roomRef = ref(db, `roomsAvailability/${selectedRoomId}/isAvailable`);
+            await set(roomRef, true);
+            console.log(`Room ${selectedRoomId} availability updated to true`);
+
+            // Move the data to the "pastCheckIn" table
+            await moveDataToPastCheckIn(uniqueId);
+
+            // Hide the sliding panel
+            document.getElementById('slidingPanelUnavail').classList.remove('show');
+        } catch (error) {
+            console.error('Error during time-out process:', error);
+        }
+    } else {
+        console.log('Time-out action canceled by user.');
+    }
+});
+
+// Function to save room state (availability) to Firebase
+export async function saveRoomState(roomId, isAvailable) {
+    try {
+        const roomRef = ref(db, `roomsAvailability/${roomId}`);
+        await set(roomRef, {
+            isAvailable
+        });
+        console.log('Room state saved:', roomId, 'Availability:', isAvailable);
+    } catch (error) {
+        console.error('Error saving room state:', error);
+    }
+}
+
+// Function to retrieve room state from Firebase
+export async function getRoomState(roomId) {
+    try {
+        const roomRef = ref(db, `roomsAvailability/${roomId}`);
+        const snapshot = await get(roomRef);
+        if (snapshot.exists()) {
+            return snapshot.val();
+        } else {
+            return null;
+        }
+    } catch (error) {
+        console.error('Error retrieving room state:', error);
+        return null;
+    }
+}
+
+// Function to initialize room with Firebase data
+export async function initializeRoom(roomElement, roomId) {
+    const roomState = await getRoomState(roomId);
+    if (roomState && !roomState.isAvailable) {
+        roomElement.style.backgroundColor = 'red';
+        roomElement.style.color = 'white';
+        changeAvailability(roomElement);
+    }
+
+    roomElement.addEventListener('click', async function() {
+        if (window.yesBtnPressed) {
+            // Save the room state to Firebase
+            await saveRoomState(roomId, false);
+
+            // Update the UI
+            roomElement.style.backgroundColor = 'red';
+            roomElement.style.color = 'white';
+            changeAvailability(roomElement);
+        }
+    });
+}
 
 console.log('Firebase script loaded and ready');
