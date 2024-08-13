@@ -103,7 +103,6 @@ updateDateTime();
 
 let popup = document.getElementById("popupPaymentWindow");
 let selectedRoomId = null;
-let countdownInterval = null;  // Variable to hold the countdown interval
 
 function changeAvailability(roomButton) {
     if (roomButton.style.backgroundColor === "skyblue") {
@@ -115,56 +114,6 @@ function changeAvailability(roomButton) {
         roomButton.style.color = "white"; 
     }
 }
-
-// document.querySelectorAll('.room').forEach(roomButton => {
-//     roomButton.addEventListener('click', function() {
-//         selectedRoomId = this.dataset.room;
-        
-//         // Check if the room button background color is red
-//         if (this.style.backgroundColor === 'red') {
-//             // Show the unavailable panel with real-time details
-//             const roomType = ['2', '4', '6', '8', '9', '10'].includes(selectedRoomId) ? 'Air-conditioned Room' : 'Standard Room';
-//             const duration = document.getElementById('ConfirmationDuration').textContent.split(' ')[1]; // Extract duration from the confirmation window
-//             const now = new Date();
-
-//             // Format date and time for display
-//             const checkInDate = now.toLocaleDateString();
-//             const checkInTime = now.toLocaleTimeString();
-            
-//             // Calculate check-out time
-//             const checkOut = new Date(now.getTime() + duration * 60 * 60 * 1000); // duration is in hours
-//             const checkOutDate = checkOut.toLocaleDateString();
-//             const checkOutTime = checkOut.toLocaleTimeString();
-            
-
-//             document.getElementById('roomInfoUnavail').textContent = `ROOM ${selectedRoomId}`;
-//             document.getElementById('UnavailRoomType').textContent = roomType;
-//             document.getElementById('UnavailDuration').textContent = `${duration} HOURS`;
-//             document.getElementById('UnavailCheckInDate').textContent = checkInDate;
-//             document.getElementById('UnavailCheckInTime').textContent = checkInTime;
-//             document.getElementById('UnavailCheckOutDate').textContent = checkOutDate;
-//             document.getElementById('UnavailCheckOutTime').textContent = checkOutTime;
-
-//             document.getElementById('slidingPanelUnavail').classList.add('show');
-//             document.getElementById('slidingPanelAirconAvail').classList.remove('show');
-//             document.getElementById('slidingPanelNonAirconAvail').classList.remove('show');
-//         } else {
-//             const isAircon = ['2', '4', '6', '8', '9', '10'].includes(selectedRoomId);
-
-//             if (isAircon) {
-//                 document.getElementById('roomInfoAircon').textContent = `ROOM ${selectedRoomId}`;
-//                 document.getElementById('slidingPanelAirconAvail').classList.add('show');
-//                 document.getElementById('slidingPanelNonAirconAvail').classList.remove('show');
-//                 document.getElementById('slidingPanelUnavail').classList.remove('show');
-//             } else {
-//                 document.getElementById('roomInfoNonAircon').textContent = `ROOM ${selectedRoomId}`;
-//                 document.getElementById('slidingPanelNonAirconAvail').classList.add('show');
-//                 document.getElementById('slidingPanelAirconAvail').classList.remove('show');
-//                 document.getElementById('slidingPanelUnavail').classList.remove('show');
-//             }
-//         }
-//     });
-// });
 
 document.querySelectorAll('.room').forEach(roomButton => {
     roomButton.addEventListener('click', function() {
@@ -198,10 +147,10 @@ document.querySelectorAll('.room').forEach(roomButton => {
     });
 });
 
-
 // Constants for additional fees
 const ADDITIONAL_FEE_NON_AIRCON = 200;
 const ADDITIONAL_FEE_AIRCON = 250;
+
 
 // Base rates for different durations
 const BASE_RATE_NON_AIRCON = { 3: 300, 6: 500, 24: 1000 };
@@ -255,7 +204,6 @@ function openPopUpPaymentWindow(roomType, duration, amount) {
     document.getElementById('ConfirmationTotalAmountPaid').textContent = `Total Amount Paid: PHP ${totalAmount.toFixed(2)}`;
 
     document.getElementById('UnavailNumOfGuest').textContent = `${numOfGuests}`;
-    document.getElementById('UnavailExtension').textContent = `${duration} HOURS`; // Assuming this is just the duration
     document.getElementById('UnavailTotalAmountPaid').textContent = `PHP ${totalAmount.toFixed(2)}`;
     
     popup.classList.add("open-paymentConfirmation");
@@ -271,5 +219,3 @@ document.getElementById('paymentConfirmationChkbox').addEventListener('change', 
     const yesBtn = document.getElementById('yesBtn');
     yesBtn.disabled = !this.checked;  // Enable the yes button only if the checkbox is checked
 });
-
-
