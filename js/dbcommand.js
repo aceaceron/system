@@ -50,23 +50,25 @@ async function generateUniqueId() {
     const dateKey = formatDate();
     const sequentialNumber = await getNextSequentialNumber(dateKey);
     // Format sequential number with leading zeros
-    const formattedNumber = String(sequentialNumber).padStart(4, '0');
+    const formattedNumber = String(sequentialNumber).padStart(3, '0');
     return `${dateKey}-${formattedNumber}`;
 }
 
 // Function to save check-in/check-out data to Firebase
-export async function saveCheckInCheckOutData(selectedRoomId, duration, checkInDate, checkInTime, checkOutDate, checkOutTime, numberOfGuests, totalAmountPaid) {
+export async function saveCheckInCheckOutData(roomNum, initialDuration, checkInDate, checkInTime, checkOutDate, checkOutTime, totalDuration, numberOfGuests, totalAmountPaid) {
     try {
         const uniqueId = await generateUniqueId();
         const newCheckInCheckOutRef = ref(db, `currentCheckIn/${uniqueId}`);
+        totalDuration = initialDuration;
 
         const checkInCheckOutData = {
-            selectedRoomId,
-            duration,
+            roomNum,
+            initialDuration,
             checkInDate,
             checkInTime,
             checkOutDate,
             checkOutTime,
+            totalDuration,
             numberOfGuests,
             totalAmountPaid
         };
@@ -78,7 +80,7 @@ export async function saveCheckInCheckOutData(selectedRoomId, duration, checkInD
     }
 }
 
-window.fetchRoomData = async function(selectedRoomId) {
+window.fetchRoomData = async function(roomNum) {
     try {
         const roomRef = ref(db, 'currentCheckIn'); 
         const snapshot = await get(roomRef);
@@ -89,24 +91,25 @@ window.fetchRoomData = async function(selectedRoomId) {
             let uniqueId = null;
 
             for (let key in data) {
-                if (data.hasOwnProperty(key) && data[key].selectedRoomId === selectedRoomId) {
+                if (data.hasOwnProperty(key) && data[key].roomNum === roomNum) {
                     foundEntry = data[key];
                     uniqueId = key;  // Save the key as the unique ID
                     break;
                 }
             }
             if (foundEntry) {
-                const { duration, checkInDate, checkInTime, checkOutDate, checkOutTime, numberOfGuests, totalAmountPaid } = foundEntry;
+                const { initialDuration, checkInDate, checkInTime, checkOutDate, checkOutTime, numberOfGuests, totalDuration, totalAmountPaid } = foundEntry;
 
-                const roomType = ['2', '4', '6', '8', '9', '10'].includes(selectedRoomId) ? 'Air-conditioned Room' : 'Standard Room';
-                document.getElementById('roomInfoUnavail').textContent = 'ROOM ' + selectedRoomId;
+                const roomType = ['2', '4', '6', '8', '9', '10'].includes(roomNum) ? 'Air-conditioned Room' : 'Standard Room';
+                document.getElementById('roomInfoUnavail').textContent = 'ROOM ' + roomNum;
                 document.getElementById('UnavailRoomType').textContent = roomType;
-                document.getElementById('UnavailRoomNum').textContent = selectedRoomId;
-                document.getElementById('UnavailDuration').textContent = duration + ' HOURS';
+                document.getElementById('UnavailRoomNum').textContent = roomNum;
+                document.getElementById('UnavailDuration').textContent = initialDuration + ' HOURS';
                 document.getElementById('UnavailCheckInDate').textContent = checkInDate;
                 document.getElementById('UnavailCheckInTime').textContent = checkInTime;
                 document.getElementById('UnavailCheckOutDate').textContent = checkOutDate;
                 document.getElementById('UnavailCheckOutTime').textContent = checkOutTime;
+                document.getElementById('UnavailTotalDuration').textContent = totalDuration + ' HOURS';
                 document.getElementById('UnavailNumOfGuest').textContent = numberOfGuests;
                 document.getElementById('UnavailTotalAmountPaid').textContent = 'PHP ' + totalAmountPaid + '.00';
 
@@ -117,10 +120,10 @@ window.fetchRoomData = async function(selectedRoomId) {
                 let remainingTime = checkoutDateTime - currentTime;
 
                 // Find the button for the selected room
-                const roomButton = document.querySelector(`#room${selectedRoomId}`);
+                const roomButton = document.querySelector(`#room${roomNum}`);
                 if (roomButton) {
-                    // Pass uniqueId and selectedRoomId to startCountdown
-                    startCountdown(remainingTime, roomButton, uniqueId, selectedRoomId);
+                    // Pass uniqueId and roomNum to startCountdown
+                    startCountdown(remainingTime, roomButton, uniqueId, roomNum);
                 }
             } else {
                 console.log('No data available for the selected room.');
@@ -131,17 +134,19 @@ window.fetchRoomData = async function(selectedRoomId) {
     }
 }
 
-function startCountdown(duration, roomButton, uniqueId, roomId) {
+let countdown;
+
+function startCountdown(initialDuration, roomButton, uniqueId, roomId) {
     const availabilityText = roomButton.querySelector('.availability-text');
 
-    const countdown = setInterval(() => {
-        let hours = Math.floor((duration % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        let minutes = Math.floor((duration % (1000 * 60 * 60)) / (1000 * 60));
-        let seconds = Math.floor((duration % (1000 * 60)) / 1000);
+    countdown = setInterval(() => {  // Assign the interval ID to the higher-scoped variable
+        let hours = Math.floor((initialDuration % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        let minutes = Math.floor((initialDuration % (1000 * 60 * 60)) / (1000 * 60));
+        let seconds = Math.floor((initialDuration % (1000 * 60)) / 1000);
 
         availabilityText.textContent = `${hours}h ${minutes}m ${seconds}s`;
 
-        if (duration <= 0) {
+        if (initialDuration <= 0) {
             clearInterval(countdown);
             roomButton.style.backgroundColor = 'skyblue';
             roomButton.style.color = 'black';
@@ -149,11 +154,10 @@ function startCountdown(duration, roomButton, uniqueId, roomId) {
             moveDataToPastCheckIn(uniqueId);
             saveRoomState(roomId, true); // 'true' indicates the room is now available
         } else {
-            duration -= 1000;
+            initialDuration -= 1000;
         }
     }, 1000);
 }
-
 
 async function moveDataToPastCheckIn(uniqueId) {
     try {
@@ -165,12 +169,15 @@ async function moveDataToPastCheckIn(uniqueId) {
         const checkInCheckOutData = checkInCheckOutSnapshot.val();
 
         if (checkInCheckOutData) {
-            // Save the data to the pastCheckIn table using the same unique ID
-            const pastCheckInRef = ref(db, `pastCheckIn/${uniqueId}`);
+            // Get the current date
+            const currentDate = new Date().toLocaleDateString('en-CA'); // Format: YYYY-MM-DD
+
+            // Save the data to the pastCheckIn table under the current date using the unique ID
+            const pastCheckInRef = ref(db, `pastCheckIn/${currentDate}/${uniqueId}`);
             
             // Save the data to the pastCheckIn table
             await set(pastCheckInRef, checkInCheckOutData);
-            console.log(`Data moved to pastCheckIn with ID: ${uniqueId}`);
+            console.log(`Data moved to pastCheckIn on ${currentDate} with ID: ${uniqueId}`);
             
             // Remove the old data from currentCheckIn
             await remove(checkInCheckOutRef);
@@ -182,6 +189,7 @@ async function moveDataToPastCheckIn(uniqueId) {
         console.error('Error moving data to pastCheckIn:', error);
     }
 }
+
 // Constants for additional fees
 const ADDITIONAL_EXTENSIONFEE_NON_AIRCON = 100;
 const ADDITIONAL_EXTENSIONFEE_AIRCON = 150;
@@ -207,15 +215,15 @@ document.getElementById('extendHr').addEventListener('click', async function() {
 
         // Retrieve unique ID and selected room number
         const uniqueId = uniqueIdElement.textContent.trim();
-        const selectedRoomId = roomNumElement.textContent.trim();
+        const roomNum = roomNumElement.textContent.trim();
 
-        if (!uniqueId || !selectedRoomId) {
+        if (!uniqueId || !roomNum) {
             console.error('Unique ID or Room Number is missing.');
             return;
         }
 
         // Determine the additional fee based on the room type
-        const additionalFee = ['2', '4', '6', '8', '9', '10'].includes(selectedRoomId) ? ADDITIONAL_EXTENSIONFEE_AIRCON : ADDITIONAL_EXTENSIONFEE_NON_AIRCON;
+        const additionalFee = ['2', '4', '6', '8', '9', '10'].includes(roomNum) ? ADDITIONAL_EXTENSIONFEE_AIRCON : ADDITIONAL_EXTENSIONFEE_NON_AIRCON;
 
         // Reference to the current booking data in Firebase
         const bookingRef = ref(db, `currentCheckIn/${uniqueId}`);
@@ -268,9 +276,12 @@ document.getElementById('extendHr').addEventListener('click', async function() {
         console.log('New check-out date:', newCheckoutDate);
         console.log('New check-out time:', newCheckoutTime);
 
+        const newTotalDuration = (bookingData.totalDuration || 0) + 1;
+
         // Update the total amount paid
         const originalAmount = parseFloat(document.getElementById('UnavailTotalAmountPaid').textContent.split('PHP ')[1]);
         const newTotalAmount = originalAmount + additionalFee;
+
         document.getElementById('UnavailTotalAmountPaid').textContent = `PHP ${newTotalAmount.toFixed(2)}`;
 
         // Update Firebase with the new checkout time and total amount
@@ -278,12 +289,14 @@ document.getElementById('extendHr').addEventListener('click', async function() {
             ...bookingData,
             checkOutDate: newCheckoutDate,
             checkOutTime: newCheckoutTime,
+            totalDuration: newTotalDuration, 
             totalAmountPaid: newTotalAmount
         });
 
         // Update the UI with the new check-out date and time
         document.getElementById('UnavailCheckOutDate').textContent = newCheckoutDate;
         document.getElementById('UnavailCheckOutTime').textContent = newCheckoutTime;
+        document.getElementById('UnavailTotalDuration').textContent = `${newTotalDuration} HOURS`;
 
         console.log('Booking extended successfully.');
     } catch (error) {
@@ -291,19 +304,16 @@ document.getElementById('extendHr').addEventListener('click', async function() {
     }
 });
 
-
 document.getElementById('timeOut').addEventListener('click', async function() {
     // Confirm action with the user
-    const confirmed = confirm('Are you sure that the guest checked out the room? This action cannot be undone.');
+    const confirmed = confirm('Are you sure you want to mark this room as checked out? This action cannot be undone.');
 
     if (confirmed) {
         // Proceed if user pressed OK
         const uniqueId = document.getElementById('UnavailUniqueId').textContent; // Fetch the displayed unique ID
-        clearInterval(countdown);
-
+        
         // Reset the room's UI
-        const roomButton = document.querySelector(`.room[data-room="${selectedRoomId}"]`);
-
+        const roomButton = document.querySelector(`.room[data-room="${roomNum}"]`);
         if (roomButton) {
             roomButton.style.backgroundColor = 'skyblue';
             roomButton.style.color = 'black';
@@ -312,15 +322,18 @@ document.getElementById('timeOut').addEventListener('click', async function() {
         
         try {
             // Update the room's availability in Firebase
-            const roomRef = ref(db, `roomsAvailability/${selectedRoomId}/isAvailable`);
+            const roomRef = ref(db, `roomsAvailability/${roomNum}/isAvailable`);
             await set(roomRef, true);
-            console.log(`Room ${selectedRoomId} availability updated to true`);
+            console.log(`Room ${roomNum} availability updated to true`);
 
             // Move the data to the "pastCheckIn" table
             await moveDataToPastCheckIn(uniqueId);
 
             // Hide the sliding panel
             document.getElementById('slidingPanelUnavail').classList.remove('show');
+            
+            // Clear the countdown interval
+            clearInterval(countdown);
         } catch (error) {
             console.error('Error during time-out process:', error);
         }
