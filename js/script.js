@@ -27,34 +27,34 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    
+
 });
-        var today = new Date();
+var today = new Date();
 
-        // Calculate tomorrow's date
-        var tomorrow = new Date(today);
-        tomorrow.setDate(today.getDate() + 1);
+// Calculate tomorrow's date
+var tomorrow = new Date(today);
+tomorrow.setDate(today.getDate() + 1);
 
-        // Calculate the date 60 days from today
-        var maxDate = new Date(today);
-        maxDate.setDate(today.getDate() + 60);
+// Calculate the date 60 days from today
+var maxDate = new Date(today);
+maxDate.setDate(today.getDate() + 60);
 
-        // Format tomorrow's date as yyyy-mm-dd
-        var ddTomorrow = String(tomorrow.getDate()).padStart(2, '0');
-        var mmTomorrow = String(tomorrow.getMonth() + 1).padStart(2, '0');
-        var yyyyTomorrow = tomorrow.getFullYear();
-        var tomorrowFormatted = yyyyTomorrow + '-' + mmTomorrow + '-' + ddTomorrow;
+// Format tomorrow's date as yyyy-mm-dd
+var ddTomorrow = String(tomorrow.getDate()).padStart(2, '0');
+var mmTomorrow = String(tomorrow.getMonth() + 1).padStart(2, '0');
+var yyyyTomorrow = tomorrow.getFullYear();
+var tomorrowFormatted = yyyyTomorrow + '-' + mmTomorrow + '-' + ddTomorrow;
 
-        // Format the max date as yyyy-mm-dd
-        var ddMax = String(maxDate.getDate()).padStart(2, '0');
-        var mmMax = String(maxDate.getMonth() + 1).padStart(2, '0');
-        var yyyyMax = maxDate.getFullYear();
-        var maxDateFormatted = yyyyMax + '-' + mmMax + '-' + ddMax;
+// Format the max date as yyyy-mm-dd
+var ddMax = String(maxDate.getDate()).padStart(2, '0');
+var mmMax = String(maxDate.getMonth() + 1).padStart(2, '0');
+var yyyyMax = maxDate.getFullYear();
+var maxDateFormatted = yyyyMax + '-' + mmMax + '-' + ddMax;
 
-        // Set the min and max attributes of the date input
-        var dateInput = document.getElementById('date');
-        dateInput.setAttribute('min', tomorrowFormatted);
-        dateInput.setAttribute('max', maxDateFormatted);
+// Set the min and max attributes of the date input
+var dateInput = document.getElementById('date');
+dateInput.setAttribute('min', tomorrowFormatted);
+dateInput.setAttribute('max', maxDateFormatted);
 
 // Section 2: Comment Handling
 function addComment() {
@@ -112,8 +112,6 @@ function addComment() {
     }
 }
 
-
-
 // Section 3: Terms and Conditions Popup
 const popup = document.getElementById('terms-popup');
 const tac = document.querySelector('.tac');
@@ -153,112 +151,3 @@ window.addEventListener('click', (event) => {
         popup2.style.display = 'none';
     }
 });
-
-document.querySelector('.confirm').addEventListener('click', function(event) {
-    event.preventDefault();
-
-    const lastName = document.getElementById('lastName');
-    const firstName = document.getElementById('firstName');
-    const phoneNumber = document.getElementById('phoneNumber');
-    const emailAddress = document.getElementById('emailAddress');
-    const date = document.getElementById('date');
-    const termsCheckbox = document.getElementById('termsCheckbox');
-    const startingTime = document.getElementById("dropdownTime");
-    const roomType = document.getElementById("dropdown0");
-    const duration = document.getElementById("dropdown1");
-    const extension = document.getElementById("dropdown2");
-
-    let valid = true;
-
-    if (lastName.value.trim() === "") {
-        lastName.classList.add('error');
-        valid = false;
-    } else {
-        lastName.classList.remove('error');
-    }
-
-    if (firstName.value.trim() === "") {
-        firstName.classList.add('error');
-        valid = false;
-    } else {
-        firstName.classList.remove('error');
-    }
-
-    if (phoneNumber.value.trim() === "") {
-        phoneNumber.classList.add('error');
-        valid = false;
-    } else {
-        phoneNumber.classList.remove('error');
-    }
-
-    if (emailAddress.value.trim() === "" || !emailAddress.checkValidity()) {
-        emailAddress.classList.add('error');
-        valid = false;
-    } else {
-        emailAddress.classList.remove('error');
-    }
-
-    if (date.value.trim() === "") {
-        date.classList.add('error');
-        valid = false;
-    } else {
-        date.classList.remove('error');
-    }
-
-    if (!termsCheckbox.checked) {
-        termsCheckbox.classList.add('error');
-        valid = false;
-    } else {
-        termsCheckbox.classList.remove('error');
-    }
-
-    if (valid) {
-        // Save the form data to Firebase
-        reservationFormDB.push().set({
-            lastName: lastName.value,
-            firstName: firstName.value,
-            phoneNumber: phoneNumber.value,
-            emailAddress: emailAddress.value,
-            date: date.value,
-            startingTime: startingTime.value,
-            roomType: roomType.value,
-            duration: duration.value,
-            extension: extension.value
-            
-        }).then(() => {
-            alert("Form submitted successfully!");
-            
-            // Clear form fields
-            lastName.value = '';
-            firstName.value = '';
-            phoneNumber.value = '';
-            emailAddress.value = '';
-            date.value = '';
-            termsCheckbox.checked = false;
-        }).catch((error) => {
-            console.error("Error writing to Firebase: ", error);
-        });
-    } else {
-        alert("Please fill out all required fields correctly and/or agree to the terms and conditions.");
-    }
-});
-
-const getElementVal = (id) => {
-    return document.getElementById(id).value;
-}
-
-
-const firebaseConfig = {
-    apiKey: "AIzaSyBODzmflzkSTC33eAwG9eauL8Ae-3Y2MVA",
-    authDomain: "lcdedb-reservation.firebaseapp.com",
-    databaseURL: "https://lcdedb-reservation-default-rtdb.firebaseio.com",
-    projectId: "lcdedb-reservation",
-    storageBucket: "lcdedb-reservation.appspot.com",
-    messagingSenderId: "197167711977",
-    appId: "1:197167711977:web:12a6ff866758a6a1639278"
-};
-
-
-firebase.initializeApp(firebaseConfig);
-
-var reservationFormDB = firebase.database().ref("reservationForm");
