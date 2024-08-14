@@ -392,4 +392,56 @@ export async function initializeRoom(roomElement, roomId) {
     });
 }
 
+// Function to fetch and display reservations
+async function displayReservations() {
+    const reservationDiv = document.querySelector('.reservation');
+    
+    if (!reservationDiv) {
+        console.error('Reservation div not found');
+        return;
+    }
+
+    try {
+        // Fetch reservations data
+        const reservationsRef = ref(db, 'reservations');
+        const snapshot = await get(reservationsRef);
+
+        if (snapshot.exists()) {
+            const reservations = snapshot.val();
+            reservationDiv.innerHTML = ''; // Clear existing content
+
+            for (const [date, reservationsByDate] of Object.entries(reservations)) {
+                const dateHeader = document.createElement('h3');
+                dateHeader.textContent = `Reservations for ${date}`;
+                reservationDiv.appendChild(dateHeader);
+
+                for (const [reservationId, reservationData] of Object.entries(reservationsByDate)) {
+                    const reservationDivElement = document.createElement('div');
+                    reservationDivElement.classList.add('reservation-item');
+                    
+                    reservationDivElement.innerHTML = `
+                        <p><strong>ID:</strong> ${reservationId}</p>
+                        <p><strong>Full Name:</strong> ${reservationData.lastName}, ${reservationData.firstName}</p>
+                        <p><strong>Phone Number:</strong> ${reservationData.phoneNumber}</p>
+                        <p><strong>Email Address:</strong> ${reservationData.emailAddress}</p>
+                        <p><strong>Date:</strong> ${reservationData.date}</p>
+                        <p><strong>Starting Time:</strong> ${reservationData.startingTime}</p>
+                        <p><strong>Room Type:</strong> ${reservationData.roomType}</p>
+                        <p><strong>Duration:</strong> ${reservationData.duration}</p>
+                        <p><strong>Extension:</strong> ${reservationData.extension}</p>
+                    `;
+                    reservationDiv.appendChild(reservationDivElement);
+                }
+            }
+        } else {
+            reservationDiv.innerHTML = '<p>No reservations found.</p>';
+        }
+    } catch (error) {
+        console.error('Error fetching reservations:', error);
+    }
+}
+
+// Call the function to display reservations when the page loads
+window.onload = displayReservations;
+
 console.log('Firebase script loaded and ready');
