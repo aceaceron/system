@@ -59,7 +59,6 @@ export async function saveCheckInCheckOutData(roomNum, initialDuration, checkInD
     try {
         const uniqueId = await generateUniqueId();
         const newCheckInCheckOutRef = ref(db, `currentCheckIn/${uniqueId}`);
-        totalDuration = initialDuration;
 
         const checkInCheckOutData = {
             roomNum,
