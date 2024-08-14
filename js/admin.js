@@ -102,7 +102,7 @@ setInterval(updateDateTime, 1000);
 updateDateTime();
 
 let popup = document.getElementById("popupPaymentWindow");
-let selectedRoomId = null;
+let roomNum = null;
 
 function changeAvailability(roomButton) {
     if (roomButton.style.backgroundColor === "skyblue") {
@@ -117,7 +117,7 @@ function changeAvailability(roomButton) {
 
 document.querySelectorAll('.room').forEach(roomButton => {
     roomButton.addEventListener('click', function() {
-        selectedRoomId = this.dataset.room;
+        roomNum = this.dataset.room;
         
         // Check if the room button background color is red
         if (this.style.backgroundColor === 'red') {                
@@ -125,20 +125,20 @@ document.querySelectorAll('.room').forEach(roomButton => {
             document.getElementById('slidingPanelAirconAvail').classList.remove('show');
             document.getElementById('slidingPanelNonAirconAvail').classList.remove('show');
             // Fetch the details from Firebase and update the panel
-            fetchRoomData(selectedRoomId).then(() => {
-                document.getElementById('roomInfoUnavail').textContent = `ROOM ${selectedRoomId}`;
+            fetchRoomData(roomNum).then(() => {
+                document.getElementById('roomInfoUnavail').textContent = `ROOM ${roomNum}`;
             });
 
         } else {
-            const isAircon = ['2', '4', '6', '8', '9', '10'].includes(selectedRoomId);
+            const isAircon = ['2', '4', '6', '8', '9', '10'].includes(roomNum);
 
             if (isAircon) {
-                document.getElementById('roomInfoAircon').textContent = `ROOM ${selectedRoomId}`;
+                document.getElementById('roomInfoAircon').textContent = `ROOM ${roomNum}`;
                 document.getElementById('slidingPanelAirconAvail').classList.add('show');
                 document.getElementById('slidingPanelNonAirconAvail').classList.remove('show');
                 document.getElementById('slidingPanelUnavail').classList.remove('show');
             } else {
-                document.getElementById('roomInfoNonAircon').textContent = `ROOM ${selectedRoomId}`;
+                document.getElementById('roomInfoNonAircon').textContent = `ROOM ${roomNum}`;
                 document.getElementById('slidingPanelNonAirconAvail').classList.add('show');
                 document.getElementById('slidingPanelAirconAvail').classList.remove('show');
                 document.getElementById('slidingPanelUnavail').classList.remove('show');
@@ -146,6 +146,8 @@ document.querySelectorAll('.room').forEach(roomButton => {
         }
     });
 });
+
+
 
 // Constants for additional fees
 const ADDITIONAL_FEE_NON_AIRCON = 200;
@@ -170,7 +172,7 @@ function openPopUpPaymentWindow(roomType, duration, amount) {
 
     const numberOfGuestsNonAircon = document.getElementById('numberOfGuestNonAircon').value;
     const numberOfGuestsAircon = document.getElementById('numberOfGuestAircon').value;
-    const numberOfGuests = ['2', '4', '6', '8', '9', '10'].includes(selectedRoomId) ? numberOfGuestsAircon : numberOfGuestsNonAircon;
+    const numberOfGuests = ['2', '4', '6', '8', '9', '10'].includes(roomNum) ? numberOfGuestsAircon : numberOfGuestsNonAircon;
 
     let numOfGuests;
     let additionalFee;
@@ -191,7 +193,7 @@ function openPopUpPaymentWindow(roomType, duration, amount) {
     let totalAmount = amount + totalAdditionalFee;
 
     // Set confirmation window details
-    document.getElementById('ConfirmationroomNum').textContent = `Room Number: ${selectedRoomId}`;
+    document.getElementById('ConfirmationroomNum').textContent = `Room Number: ${roomNum}`;
     document.getElementById('ConfirmationroomType').textContent = `Room Type: ${roomType}`;
     document.getElementById('ConfirmationDuration').textContent = `Duration: ${duration} HOURS`;
 
