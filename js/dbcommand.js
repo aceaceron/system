@@ -28,7 +28,7 @@ function formatDate() {
 
 // Function to get the next sequential number for the date key
 async function getNextSequentialNumber(dateKey) {
-    const countRef = ref(db, `checkIn-count/${dateKey}`);
+    const countRef = ref(db, `_countForCheckIns/${dateKey}`);
 
     try {
         const snapshot = await get(countRef);
