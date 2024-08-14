@@ -25,7 +25,7 @@ document.getElementById('yesBtn').addEventListener('click', function() {
             roomButton.style.color = 'white';
 
             // Save data
-            saveCheckInCheckOutData(roomNum, duration, checkInDate, checkInTime, checkOutDate, checkOutTime, numberOfGuests, totalDuration, totalAmountPaid);
+            saveCheckInCheckOutData(roomNum, duration, checkInDate, checkInTime, checkOutDate, checkOutTime, totalDuration, numberOfGuests, totalAmountPaid);
 
             // Save room state to Firebase
             saveRoomState(roomNum, false);
