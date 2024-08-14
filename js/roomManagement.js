@@ -1,10 +1,9 @@
-import { saveCheckInCheckOutData, initializeRoom, getRoomState, saveRoomState } from './dbcommand.js'; // Adjust the path accordingly
+import { saveCheckInCheckOutData, initializeRoom, saveRoomState } from './dbcommand.js'; // Adjust the path accordingly
 
-    
 document.getElementById('yesBtn').addEventListener('click', function() {
     document.getElementById('paymentConfirmationChkbox').checked = false;
     document.getElementById('yesBtn').disabled = true;
-    if (selectedRoomId) {
+    if (roomNum) {
         // Extract the necessary values
         const durationText = document.getElementById('ConfirmationDuration').textContent;
         const duration = parseInt(durationText.split(' ')[1]);
@@ -12,22 +11,26 @@ document.getElementById('yesBtn').addEventListener('click', function() {
         const checkInTime = document.getElementById('ConfirmationCheckInTime').textContent.split(': ')[1];
         const checkOutDate = document.getElementById('ConfirmationCheckOutDate').textContent.split(': ')[1];
         const checkOutTime = document.getElementById('ConfirmationCheckOutTime').textContent.split(': ')[1];
+        const totalDuration = duration;
+        console.log('Total Duration:', totalDuration, 'Type:', typeof totalDuration);
+
+
         const numberOfGuests = parseInt(document.getElementById('ConfirmationNumOfGuest').textContent.split(': ')[1]);
         const totalAmountPaid = parseFloat(document.getElementById('ConfirmationTotalAmountPaid').textContent.split('PHP ')[1]);
 
         // Find the button corresponding to the selected room and change its background color to red
-        const roomButton = document.querySelector(`.room[data-room="${selectedRoomId}"]`);
+        const roomButton = document.querySelector(`.room[data-room="${roomNum}"]`);
         if (roomButton) {
             roomButton.style.backgroundColor = 'red';
             roomButton.style.color = 'white';
 
             // Save data
-            saveCheckInCheckOutData(selectedRoomId, duration, checkInDate, checkInTime, checkOutDate, checkOutTime, numberOfGuests, totalAmountPaid);
+            saveCheckInCheckOutData(roomNum, duration, checkInDate, checkInTime, checkOutDate, checkOutTime, numberOfGuests, totalDuration, totalAmountPaid);
 
             // Save room state to Firebase
-            saveRoomState(selectedRoomId, false);
+            saveRoomState(roomNum, false);
 
-            fetchRoomData(selectedRoomId);
+            fetchRoomData(roomNum);
 
             // Change availability of the room
             changeAvailability(roomButton);
@@ -36,12 +39,12 @@ document.getElementById('yesBtn').addEventListener('click', function() {
             closePopUpPaymentWindow();
 
             // Automatically slide back the sliding panel
-            if (['2', '4', '6', '8', '9', '10'].includes(selectedRoomId)) {
+            if (['2', '4', '6', '8', '9', '10'].includes(roomNum)) {
                 document.getElementById('slidingPanelAirconAvail').classList.remove('show');
             } else {
                 document.getElementById('slidingPanelNonAirconAvail').classList.remove('show');
             }
-            fetchRoomData(selectedRoomId);
+            fetchRoomData(roomNum);
         }
     }
 });
