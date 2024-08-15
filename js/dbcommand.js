@@ -355,18 +355,18 @@ export async function saveRoomState(roomId, isAvailable) {
 }
 
 // Function to retrieve room state from Firebase
-export async function getRoomState(roomId) {
+async function getRoomState(roomId) {
     try {
         const roomRef = ref(db, `roomsAvailability/${roomId}`);
         const snapshot = await get(roomRef);
         if (snapshot.exists()) {
             return snapshot.val();
         } else {
-            return null;
+            return { isAvailable: true }; // Default to available if no data
         }
     } catch (error) {
         console.error('Error retrieving room state:', error);
-        return null;
+        return { isAvailable: true }; // Default to available in case of error
     }
 }
 
@@ -396,43 +396,60 @@ export async function initializeRoom(roomElement, roomId) {
 async function displayReservations() {
     const reservationDiv = document.querySelector('.reservation');
     
-    if (!reservationDiv) {
-        console.error('Reservation div not found');
-        return;
-    }
-
     try {
-        // Fetch reservations data
         const reservationsRef = ref(db, 'reservations');
         const snapshot = await get(reservationsRef);
 
         if (snapshot.exists()) {
             const reservations = snapshot.val();
-            reservationDiv.innerHTML = ''; // Clear existing content
+            reservationDiv.innerHTML = '';
 
             for (const [date, reservationsByDate] of Object.entries(reservations)) {
-                const dateHeader = document.createElement('h3');
-                dateHeader.textContent = `Reservations for ${date}`;
-                reservationDiv.appendChild(dateHeader);
-
                 for (const [reservationId, reservationData] of Object.entries(reservationsByDate)) {
                     const reservationDivElement = document.createElement('div');
                     reservationDivElement.classList.add('reservation-item');
                     
                     reservationDivElement.innerHTML = `
-                        <p><strong>ID:</strong> ${reservationId}</p>
-                        <p><strong>Full Name:</strong> ${reservationData.lastName}, ${reservationData.firstName}</p>
-                        <p><strong>Phone Number:</strong> ${reservationData.phoneNumber}</p>
-                        <p><strong>Email Address:</strong> ${reservationData.emailAddress}</p>
-                        <p><strong>Date:</strong> ${reservationData.date}</p>
-                        <p><strong>Starting Time:</strong> ${reservationData.startingTime}</p>
-                        <p><strong>Room Type:</strong> ${reservationData.roomType}</p>
-                        <p><strong>Duration:</strong> ${reservationData.duration}</p>
-                        <p><strong>Extension:</strong> ${reservationData.extension}</p>
+                        <p><strong>ID:</strong><br>${reservationId}</p>
+                        <p><strong>Date:</strong><br>${reservationData.date}</p>
+                        <p><strong>Starting Time:</strong><br>${reservationData.startingTime}</p>
+                        <p><strong>Room Type:</strong><br>${reservationData.roomType}</p>
+                        <p><strong>Duration:</strong><br>${reservationData.duration}</p>
+                        <p><strong>Extension:</strong><br>${reservationData.extension}</p><hr>
+                        <p><strong>Full Name:</strong><br>${reservationData.lastName}, ${reservationData.firstName}</p>
+                        <p><strong>Phone Number:</strong><br>${reservationData.phoneNumber}</p>
+                        <p><strong>Email Address:</strong><br>${reservationData.emailAddress}</p>
+                        <div class="reservation-buttons">
+                            <button class="btn-book"><i class="fa-solid fa-check"></i></button>
+                            <button class="btn-no-show"><i class="fa-solid fa-user-slash"></i></button>
+                            <button class="btn-invalid"><i class="fa-solid fa-text-slash"></i></button>
+                        </div>
                     `;
                     reservationDiv.appendChild(reservationDivElement);
                 }
             }
+
+            // Attach event listeners after the content is rendered
+            document.querySelectorAll('.btn-book').forEach(button => {
+                button.addEventListener('click', function() {
+                    const reservationItem = this.closest('.reservation-item');
+                    const roomElement = reservationItem.querySelector('p:nth-child(4)'); // Adjust to correct nth-child if needed
+                    
+                    if (roomElement) {
+                        const roomText = roomElement.textContent.trim();
+            
+                        // Extract the room type by splitting based on the colon and trimming
+                        const roomTypeMatch = roomText.match(/Room Type:\s*(.*)/);
+                        const roomType = roomTypeMatch ? roomTypeMatch[1].trim() : 'Unknown';
+            
+                        showRoomSelectionModal(roomType);
+                    } else {
+                        console.error('Room type element not found!');
+                    }
+                });
+            });
+            
+
         } else {
             reservationDiv.innerHTML = '<p>No reservations found.</p>';
         }
@@ -440,6 +457,99 @@ async function displayReservations() {
         console.error('Error fetching reservations:', error);
     }
 }
+
+// // Function to show the room selection modal
+// async function showRoomSelectionModal(roomType) {
+//     const roomSelectionModal = document.getElementById('roomSelectionModal');
+//     const roomNumbersContainer = document.getElementById('roomNumbersContainer');
+//     roomNumbersContainer.innerHTML = ''; // Clear existing room numbers
+
+//     const airconRooms = [1, 3, 5, 7];
+//     const standardRooms = [2, 4, 6, 8, 9, 10];
+
+//     // Determine which rooms should be shown based on the room type
+//     const roomsToShow = roomType === 'AIRCON ROOM' ? airconRooms : standardRooms;
+
+    
+
+//     // Generate room numbers dynamically
+//     for (let i = 1; i <= 10; i++) {
+//         const roomDiv = document.createElement('div');
+//         roomDiv.classList.add('room-number');
+//         roomDiv.textContent = i;
+
+        
+//         // Fetch the room availability from Firebase
+//         const roomState = await getRoomState(i);
+
+//         // If the room is not available, disable it and change its appearance
+//         if (roomState && !roomState.isAvailable) {
+//             roomDiv.style.backgroundColor = 'red';
+//             roomDiv.style.cursor = 'not-allowed';
+//             roomDiv.classList.add('disabled'); 
+//         }
+
+//         // Disable rooms that don't match the room type
+//         if (!roomsToShow.includes(i)) {
+//             roomDiv.style.backgroundColor = 'gray';
+//             roomDiv.style.cursor = 'not-allowed';
+//             roomDiv.classList.add('disabled'); 
+//         }
+
+//         roomNumbersContainer.appendChild(roomDiv);
+//     }
+
+//     // Show the modal
+//     roomSelectionModal.style.display = 'block';
+// }
+
+// Function to show the room selection modal
+async function showRoomSelectionModal(roomType) {
+    const roomSelectionModal = document.getElementById('roomSelectionModal');
+    const roomNumbersContainer = document.getElementById('roomNumbersContainer');
+    const roomNumbers = roomNumbersContainer.querySelectorAll('.room-number');
+
+    // Reset styles for all room numbers
+    roomNumbers.forEach(roomDiv => {
+        roomDiv.classList.remove('disabled');
+        roomDiv.style.backgroundColor = ''; // Reset to default
+        roomDiv.style.cursor = ''; // Reset cursor
+    });
+
+    // Define which rooms should be disabled based on room type
+    const airconRooms = [1, 3, 5, 7];
+    const standardRooms = [2, 4, 6, 8, 9, 10];
+
+    for (const roomDiv of roomNumbers) {
+        const roomNumber = parseInt(roomDiv.getAttribute('data-room'), 10);
+
+        // Fetch room availability from Firebase
+        const roomState = await getRoomState(roomNumber);
+
+        if ((roomType === 'NON-AIRCON ROOM' && standardRooms.includes(roomNumber)) || (roomType === 'AIRCON ROOM' && airconRooms.includes(roomNumber))) {
+            roomDiv.classList.add('disabled');
+            roomDiv.style.backgroundColor = 'Gray'; // Set background color to red
+            roomDiv.style.cursor = 'not-allowed'; // Set cursor to not-allowed
+        } else if (roomState && !roomState.isAvailable) {
+            // If the room is not available, disable it and change its appearance
+            roomDiv.style.backgroundColor = 'red';
+            roomDiv.style.cursor = 'not-allowed';
+            roomDiv.classList.add('disabled'); 
+        } 
+    }
+
+    // Show the modal
+    roomSelectionModal.style.display = 'block';
+}
+
+document.getElementById('closeRoomSelectionModal').addEventListener('click', function() {
+    document.getElementById('roomSelectionModal').style.display = 'none';
+});
+
+
+document.getElementById('closeRoomSelectionModal').addEventListener('click', function() {
+    document.getElementById('roomSelectionModal').style.display = 'none';
+});
 
 // Call the function to display reservations when the page loads
 window.onload = displayReservations;
