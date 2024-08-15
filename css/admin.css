@@ -14,7 +14,7 @@
     left: 0;
     z-index: -1; /* Ensure the background is behind other elements */
     filter: blur(3px);
-    padding-bottom: 200vh;
+    padding-bottom: 55vh;
     margin: 0;
 }
 body {
@@ -494,7 +494,7 @@ nav ul li a {
 
     .bg {
         padding-right: 0;
-        padding-bottom: 80vh;
+        padding-bottom: 117vh;
         margin: 0;
     }
 
