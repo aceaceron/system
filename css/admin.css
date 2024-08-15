@@ -20,6 +20,7 @@
 body {
     background-color: white;
 }
+
 .header {
     display: flex;
     align-items: center;
@@ -27,41 +28,49 @@ body {
     width: 100%;
     padding: 10px;
 }
+
 .hello {
     padding-right: 20px;
 }
+
 .date-time {
     font-size: 16px;
 }
+
 .logo {
     width: 25vh;
     transition: all 0.5s ease;
     text-align: center;
 }
+
 .menu-container {
     display: flex;
     align-items: center;
 }
+
 .menu-button {
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
-    background: none; /* Ensure no background */
+    background: none;
+    /* Ensure no background */
     display: none;
     transition: all 0.5s ease-out;
 }
+
 .dropdown-menu {
     display: none;
     position: absolute;
     background-color: white;
-    box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
     z-index: 1;
     border-radius: 5px;
     margin-top: 5px;
     width: 200px;
 }
+
 .dropdown-menu a {
     color: black;
     padding: 12px 16px;
@@ -69,9 +78,11 @@ body {
     display: block;
     border-radius: 5px;
 }
+
 .dropdown-menu a:hover {
     background-color: #f1f1f1;
 }
+
 nav {
     height: 100%;
     width: 10%;
@@ -82,14 +93,17 @@ nav {
     color: white;
     text-shadow: 1px 1px 0 black;
 }
+
 .navigation {
     width: 10%;
     float: left;
 }
+
 nav ul li {
     list-style: none;
     line-height: 10vh;
 }
+
 nav ul li a {
     cursor: default;
     font-size: 30px;
@@ -180,7 +194,7 @@ nav ul li a {
     margin: 15% auto; /* 15% from the top and centered */
     padding: 20px;
     border: 1px solid #888;
-    width: 80%;
+    width: 50%;
     position: relative;
 }
 
@@ -197,7 +211,12 @@ nav ul li a {
 
 .room-numbers {
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.room-numbers-sub {
+    display: flex;
 }
 
 .room-number {
@@ -210,6 +229,7 @@ nav ul li a {
     cursor: pointer;
     background-color: #fff;
     border-radius: 50%;
+    margin: 10px;
 }
 
 .room-number.disabled {
@@ -220,18 +240,19 @@ nav ul li a {
 .dashboard {
     height: auto;
     width: 80%;
-
     display: flex;
     flex-direction: column;
     background-color: rgba(0, 0, 0, 0.5);
     padding: 30px;
     border-radius: 30px;
 }
+
 .rooms {
     width: auto;
     display: flex;
     flex-direction: row;
 }
+
 .room {
     color: black;
     background-color: skyblue;
@@ -246,20 +267,26 @@ nav ul li a {
     width: 50%;
     font-size: 20px;
     position: relative;
-    padding-right: 60px; /* Adjust as needed to make room for the text */
+    padding-right: 60px;
+    /* Adjust as needed to make room for the text */
 }
+
 .availability-text {
     position: absolute;
-    right: 10px; /* Position the text to the far right of the button */
+    right: 10px;
+    /* Position the text to the far right of the button */
     top: 50%;
     transform: translateY(-50%);
-    font-size: 14px; /* Adjust the size as needed */
+    font-size: 14px;
+    /* Adjust the size as needed */
     font-size: 20px;
 }
+
 .sliding-panel {
     position: fixed;
     top: 0;
-    right: -400px; /* Start hidden off-screen */
+    right: -400px;
+    /* Start hidden off-screen */
     width: 300px;
     height: 100vh;
     background-color: white;
@@ -267,22 +294,42 @@ nav ul li a {
     transition: right 0.5s ease;
     overflow-y: auto;
     padding: 20px;
-    z-index: 1000; /* Ensure it's above other content */
+    z-index: 1000;
+    /* Ensure it's above other content */
 }
+
 .sliding-panel.show {
-    right: 0; /* Slide in */
+    right: 0;
+    /* Slide in */
 }
-.sliding-panel .close-btn {
+
+.sliding-panel .close-btn, #closeRoomSelectionModal {
     display: block;
     margin-bottom: 10px;
     cursor: pointer;
-    font-size: 20px;
     text-align: right;
 }
-#roomInfoNonAircon, #roomInfoAircon, #roomInfoUnavail {
+
+.close-btn, #closeRoomSelectionModal {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close-btn:hover, #closeRoomSelectionModal:hover {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+#roomInfoNonAircon,
+#roomInfoAircon,
+#roomInfoUnavail {
     text-align: center;
     font-size: 36px;
 }
+
 .duration {
     font-size: 25px;
     background-color: skyblue;
@@ -292,11 +339,15 @@ nav ul li a {
     margin-top: 10px;
     transition: all 0.5s ease;
 }
+
 .duration:hover {
     background-color: blue;
     color: white;
 }
-#slidingPanelAirconAvail h3, #slidingPanelNonAirconAvail h3, #slidingPanelUnavail h2{
+
+#slidingPanelAirconAvail h3,
+#slidingPanelNonAirconAvail h3,
+#slidingPanelUnavail h2 {
     text-align: center;
 }
 
@@ -346,15 +397,18 @@ nav ul li a {
 .menuLogo {
     width: 30px;
 }
-#unavailDetails p{
+
+#unavailDetails p {
     font-size: 18px;
 }
+
 .confirmationWindow {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
 }
+
 .paymentConfirmation {
     width: 300px;
     background-color: white;
@@ -369,32 +423,42 @@ nav ul li a {
     visibility: hidden;
     transition: transform 0.4s, top 0.4s;
 }
+
 .open-paymentConfirmation {
     visibility: visible;
     top: 50%;
     transform: translate(-50%, -50%) scale(1);
 }
+
 .btnConfirmation {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
 }
-.paymentInfo div{
+
+.paymentInfo div {
     padding: 10px;
 }
-#yesBtn, #noBtn, #extendHr, #timeOut {
+
+#yesBtn,
+#noBtn,
+#extendHr,
+#timeOut {
     padding: 10px;
     width: 120px;
     border-radius: 30px;
 }
+
 #yesBtn {
     background-color: green;
     color: white;
     transition: all 0.5s ease;
 }
+
 #yesBtn:disabled {
     background-color: gray;
 }
+
 #extendHr {
     background: blue;
     color: white;
@@ -402,62 +466,93 @@ nav ul li a {
     width: 100%;
     margin: 10px 0 10px 0;
 }
-#noBtn, #timeOut {
+
+#noBtn,
+#timeOut {
     background-color: red;
     color: white;
 }
+
 #timeOut {
     font-size: 26px;
     width: 100%;
     margin: 10px 0 10px 0;
 }
+
 @media screen and (max-width: 1000px) {
     .logo {
         width: 20vh;
         height: auto;
         padding-left: 10vh;
     }
+
     .header {
         display: flex;
         flex-direction: row;
         align-items: center;
     }
+
     .bg {
         padding-right: 0;
         padding-bottom: 80vh;
         margin: 0;
     }
+
     .menu-button {
         display: inline-flex;
         flex-direction: start;
         position: absolute;
         top: 5vh;
     }
+
     .menu-container {
-        display: inline-block; 
+        display: inline-block;
     }
+
     .dropdown-menu {
         position: absolute;
         top: 12vh;
         width: 30%;
     }
+
     nav {
         display: none;
     }
+
     .reservation {
         background-color: white;
         width: 100%;
         height: 100%;
     }
+
     .dashboard {
         width: auto;
     }
+
     .rooms {
         display: flex;
         flex-direction: column;
         padding-right: 5%;
     }
+    .room-numbers {
+        flex-direction: column;
+    }
+    .roomSelectModal-content {
+        width: 80%;
+    }
+
+    .room-numbers-sub {
+        width: 100%;
+        justify-content: space-between; /* Distributes room numbers evenly in each row */
+    }
+    .room-number {
+        height: 50px;
+        width: 50px;
+    }
     .room {
         width: 100%;
+    }
+    .roomSelectModal {
+        top: 30%;
     }
 }
