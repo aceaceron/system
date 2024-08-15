@@ -147,8 +147,6 @@ document.querySelectorAll('.room').forEach(roomButton => {
     });
 });
 
-
-
 // Constants for additional fees
 const ADDITIONAL_FEE_NON_AIRCON = 200;
 const ADDITIONAL_FEE_AIRCON = 250;
