@@ -14,7 +14,7 @@
     left: 0;
     z-index: -1; /* Ensure the background is behind other elements */
     filter: blur(3px);
-    padding-bottom: 20vh;
+    padding-bottom: 200vh;
     margin: 0;
 }
 body {
