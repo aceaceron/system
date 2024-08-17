@@ -46,7 +46,7 @@ async function getNextSequentialNumber(dateKey) {
 }
 
 // Function to generate a unique ID based on the reservation date and a sequential number
-async function generateUniqueId(reservationDate) {
+async function generateReservationId(reservationDate) {
     const dateKey = formatDate(reservationDate);
     const sequentialNumber = await getNextSequentialNumber(dateKey);
     // Format sequential number with leading zeros
@@ -55,9 +55,50 @@ async function generateUniqueId(reservationDate) {
 }
 
 
+// Constants for base rates
+const BASE_RATE_NON_AIRCON = { 3: 300, 6: 500, 24: 1000 };
+const BASE_RATE_AIRCON = { 3: 500, 6: 800, 24: 1500 };
+
+// Constants for additional fees
+const ADDITIONAL_FEE_NON_AIRCON = 200;
+const ADDITIONAL_FEE_AIRCON = 250;
+const ADDITIONAL_EXTENSIONFEE_NON_AIRCON = 100;
+const ADDITIONAL_EXTENSIONFEE_AIRCON = 150;
+
+// Function to calculate the amount to pay
+function calculateAmountToPay(roomType, duration, extension, numberOfGuests) {
+    let baseRate;
+    let additionalFeePerGuest;
+    let extensionFeePerHour;
+
+    if (roomType === 'AIR-CONDITIONED ROOM') {
+        baseRate = BASE_RATE_AIRCON[duration];
+        additionalFeePerGuest = ADDITIONAL_FEE_AIRCON;
+        extensionFeePerHour = ADDITIONAL_EXTENSIONFEE_AIRCON;
+    } else if (roomType === 'STANDARD ROOM') {
+        baseRate = BASE_RATE_NON_AIRCON[duration];
+        additionalFeePerGuest = ADDITIONAL_FEE_NON_AIRCON;
+        extensionFeePerHour = ADDITIONAL_EXTENSIONFEE_NON_AIRCON;
+    } else {
+        throw new Error('Unknown room type');
+    }
+
+    // Calculate additional fees for guests more than 2
+    const additionalGuestFees = (numberOfGuests > 2) ? (numberOfGuests - 2) * additionalFeePerGuest : 0;
+
+    // Calculate extension fees
+    const extensionFees = extension * extensionFeePerHour;
+
+    // Total amount to pay
+    const totalAmount = baseRate + additionalGuestFees + extensionFees;
+    return totalAmount;
+}
+
 // Event listener for form submission
 document.querySelector('.confirm').addEventListener('click', async function (event) {
     event.preventDefault();
+
+    showLoadingScreen();
 
     const lastName = document.getElementById('lastName');
     const firstName = document.getElementById('firstName');
@@ -69,6 +110,7 @@ document.querySelector('.confirm').addEventListener('click', async function (eve
     const roomType = document.getElementById("dropdown0");
     const duration = document.getElementById("dropdown1");
     const extension = document.getElementById("dropdown2");
+    const numberOfGuests = document.getElementById("numOfGuest");
 
     let valid = true;
 
@@ -108,6 +150,14 @@ document.querySelector('.confirm').addEventListener('click', async function (eve
         date.classList.remove('error');
     }
 
+    if (numberOfGuests.value < 1 ||  numberOfGuests.value > 6) {
+        numberOfGuests.classList.add('error');
+        valid = false;
+        alert("Invalid value. Number of guests minimum is 1 and maximum of 6.");
+    } else {
+        numberOfGuests.classList.remove('error');
+    }
+
     if (!termsCheckbox.checked) {
         termsCheckbox.classList.add('error');
         valid = false;
@@ -117,22 +167,31 @@ document.querySelector('.confirm').addEventListener('click', async function (eve
 
     if (valid) {
         try {
-            const reservationId = await generateUniqueId(date.value);
-            const reservationRef = ref(db, `reservations/${date.value}/${reservationId}`);
+            const reservationId = await generateReservationId(date.value);
+            const reservationRef = ref(db, `activeReservations/${date.value}/${reservationId}`);
             
+            const durationValue = parseInt(duration.value, 10) || 0;
+            const extensionValue = parseInt(extension.value, 10) || 0;
+            const numberOfGuestsValue = parseInt(numberOfGuests.value, 10) || 0;
+
+            // Calculate the total amount to pay
+            const amountToPay = calculateAmountToPay(roomType.value, durationValue, extensionValue, numberOfGuestsValue);
+            
+
             await set(reservationRef, {
                 lastName: lastName.value,
                 firstName: firstName.value,
                 phoneNumber: phoneNumber.value,
                 emailAddress: emailAddress.value,
-                date: date.value,
-                startingTime: startingTime.value,
+                reservationCheckInDate: date.value,
+                reservationCheckInTime: startingTime.value,
                 roomType: roomType.value,
-                duration: duration.value,
-                extension: extension.value
+                duration: durationValue,
+                extension: extensionValue,
+                numberOfGuests: numberOfGuestsValue,
+                amountToPay: amountToPay
             });
-
-            alert("Form submitted successfully!");
+            alert(`Good day Ma'am/Sir ${firstName.value}! Your reservation form has been successfully submitted. Please take a screenshot of this window.\nReservation ID: ${reservationId} \nAmount to pay when arrived: PHP ${amountToPay}.00`);
 
             // Clear form fields
             lastName.value = '';
@@ -140,11 +199,29 @@ document.querySelector('.confirm').addEventListener('click', async function (eve
             phoneNumber.value = '';
             emailAddress.value = '';
             date.value = '';
+            numberOfGuests.value = '2';
             termsCheckbox.checked = false;
         } catch (error) {
             console.error("Error writing to Firebase: ", error);
+        } finally {
+            // Hide the loading screen
+            hideLoadingScreen();
         }
     } else {
         alert("Please fill out all required fields correctly and/or agree to the terms and conditions.");
     }
+});
+
+function showLoadingScreen() {
+    console.log('Showing loading screen');
+    document.getElementById('loadingScreen').style.display = 'block';
+}
+
+function hideLoadingScreen() {
+    console.log('Hiding loading screen');
+    document.getElementById('loadingScreen').style.display = 'none';
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    hideLoadingScreen();
 });
