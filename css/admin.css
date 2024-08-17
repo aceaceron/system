@@ -74,7 +74,7 @@ body {
     z-index: 1;
     border-radius: 5px;
     margin-top: 5px;
-    width: 200px;
+    width: auto;
 }
 
 .dropdown-menu a {
