@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin | La Casa de Espeso</title>
     <link rel="stylesheet" href="css/admin.css">
-    <link rel="icon" href="img/logo.png" type="image/png">
 </head>
 <body>
     <div class="bg"></div>
@@ -16,19 +15,21 @@
             <div class="dropdown-menu">
                 <a href="#">DASHBOARD</a>
                 <a href="#">ACCOUNTS</a>
+                <a href="#">RESERVATIONS</a>
             </div>
             <img src="img/logo.png" class="logo">
         </div>
+        <div class="navigation">
+            <nav>
+                <ul>
+                    <li id="dashboard"><a><i class="fa-solid fa-table-columns"></i></a></li>
+                    <li id="accounts"><a><i class="fa-regular fa-user"></i></a></li>
+                    <li id="reservations"><a><i class="fa-solid fa-list"></i></a></li>
+                </ul>
+            </nav>
+        </div>
         <h3 class="hello">Hello, Admin<div class="date-time" id="dateTime"></div></h3>
-    </div>
-    
-    <div class="navigation">
-        <nav>
-            <ul>
-                <li id="dashboard"><a><i class="fa-solid fa-table-columns"></i></a></li>
-                <li id="accounts"><a><i class="fa-regular fa-user"></i></a></li>
-            </ul>
-        </nav>
+        
     </div>
     
     <div class="dashboard">
@@ -55,6 +56,50 @@
                 <button id="closeRoomSelectionModal">&times;</button>
             </div>
         </div>
+
+        <div id="invalidReservationModal" class="invalidReservation">
+            <div class="invalidReservationModal-content">
+                <span class="closeInvalidModalBtn" id="closeInvalidModal">&times;</span>
+                <p id="invalidReservationMessage"></p>
+
+                <div class="moveToFailed">
+                    <p id="reasonLabel">Reason: </p><input type="text" class="reasonOfFailure">
+                </div>
+                <button id="moveToFailed">Delete Data</button>
+                <div class="editReservationValuesWindow">
+                    <select id="editReservationKey" name="editReservationKeytoEdit" class="editReservationKeySelect">
+                        <option value="lastName" class="reservationKeys">Last name: </option>
+                        <option value="firstName" class="reservationKeys">First name: </option>
+                        <option value="phoneNumber" class="reservationKeys">Phone number: </option>
+                        <option value="emailAddress" class="reservationKeys">Email address: </option>
+                    </select>
+                    <input type="text" class="editReservationValue" id="editReservationValue">
+                </div>
+                
+                <button id="editReservation">Edit Value</button>
+                <hr>
+                <p style="color: red;">The following values can not be edited. If the invalid value/s is/are found at the following. it is recommended to pass another reservation.</p>
+                <div class="reservationInfo">
+                    
+                    <div class="reservationInfo-content">
+                        <p>Reservation ID: <span id="reservationInfoId"></span></p>
+                        <p>Date of Check-in: <span id="reservationInfoCheckInDate"></span></p>
+                        <p>Time of Check-in: <span id="reservationInfoCheckInTime"></span></p>
+                        <p>Room Type: <span id="reservationInfoRoomType"></span></p>
+                        <p>Duration: <span id="reservationInfoDuration"></span></p>
+                    </div>
+                    <div class="reservationInfo-content">
+                        <p>Extension: <span id="reservationInfoExtension"></span></p>
+                        <p>Number of Guest: <span id="reservationInfoNumOfGuest"></span></p>
+                        <p>Amount to pay: <span id="reservationInfoTotalAmountPaid"></span></p>
+                    </div>
+                    
+                </div>
+                
+                
+            </div>
+        </div>
+
         <div class="rooms">
             <button id="room1" class="room" data-room="1">
                 ROOM 1 <i class="fa-solid fa-fan"></i>
@@ -150,12 +195,13 @@
         <div id="roomInfoUnavail">Select a room to see the details.</div>
         <h2 style="color: red;">OCCUPIED</h2>
         <div id="unavailDetails">
-            <p>ID:<br><span id="UnavailUniqueId"></span></p>
+            <p>ID:<br><span id="UnavailCheckInId"></span></p>
             <p>Room Number:<br><span id="UnavailRoomNum"></span></p>
             <p>Room Type:<br><span id="UnavailRoomType"></span></p>
             <p>Initial Duration:<br><span id="UnavailDuration"></span></p>
             <p>Date of Check-in:<br><span id="UnavailCheckInDate"></span></p>
             <p>Time In:<br><span id="UnavailCheckInTime"></span></p>
+            <p>Extension:<br><span id="UnavailExtension"></span></p>
             <p>Date of Check-out:<br><span id="UnavailCheckOutDate"></span></p>
             <p>Time Out:<br><span id="UnavailCheckOutTime"></span></p>
             <p>Total Duration:<br><span id="UnavailTotalDuration"></span></p>
@@ -196,6 +242,9 @@
         </div>
     </div>
 
+    <div id="loadingScreen" class="loading-screen">
+        <div class="spinner"></div>
+    </div>
 
     <script type="module" src="https://aceaceron.github.io/system/js/dbcommand.js"></script>
     <script type="module" src="https://aceaceron.github.io/system/js/roomManagement.js"></script>
