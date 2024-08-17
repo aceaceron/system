@@ -67,8 +67,21 @@ input {
     margin-bottom: 10px;
     margin-top: 10px;
 }
+
 #date {
     width: 500px;
+}
+#infos {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+}
+.infos {
+    width: 30%;
+}
+#numOfGuest {
+    width: 80%;
 }
 #dropdownTime {
     padding: 10px;
@@ -461,4 +474,38 @@ footer {
     text-align: center;
     background-color: black;
     color: white;
+}
+
+.loading-screen {
+    display: none; /* Hidden by default */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    color: white;
+    font-size: 1.5em;
+    text-align: center;
+}
+
+.loading-screen .spinner {
+    border: 8px solid #f3f3f3;
+    border-top: 8px solid #3498db;
+    margin-top: 25%;
+    margin-left: 47.5%;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 2s linear infinite;
+}
+
+/* Spinner animation */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
