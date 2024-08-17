@@ -6,12 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>La Casa de Espeso</title>
     <link rel="stylesheet" href="css/style.css">
-    <link rel="icon" href="img/logo.png" type="image/png">
 </head>
 
 <body>
     <header>
-
         <a href="index.html"><img src="img/logo.jpg" class="logo"></a>
         <div class="nav">
             <a href="#reservation">RESERVATION</a>
@@ -21,7 +19,6 @@
             <a href="#contact">CONTACT</a>
             <a href="#aboutus">ABOUT US</a>
         </div>
-
     </header>
 
     <div class="container" id="reservation">
@@ -135,28 +132,33 @@
                 <form action="/submit" method="post">
                     ROOM TYPE:
                     <select id="dropdown0" name="dropdown">
-                        <option value="AIRCON ROOM" selected>AIRCON ROOM</option>
-                        <option value="NON-AIRCON ROOM">NON-AIRCON ROOM</option>
+                        <option value="AIR-CONDITIONED ROOM" selected>AIR-CONDITIONED ROOM</option>
+                        <option value="STANDARD ROOM">STANDARD ROOM</option>
                     </select>
                 </form>
                 <form action="/submit" method="post">
                     DURATION:
                     <select id="dropdown1" name="dropdown">
-                        <option value="3 HOURS" selected>3 HOURS</option>
-                        <option value="6 HOURS">6 HOURS</option>
-                        <option value="12 HOURS">12 HOURS</option>
-                        <option value="24 HOURS">24 HOURS</option>
+                        <option value="3" selected>3 HOURS</option>
+                        <option value="6">6 HOURS</option>
+                        <option value="24">24 HOURS</option>
                     </select>
                 </form>
-                <form action="/submit" method="post">
+                <div id="infos">
+                    <form action="/submit" method="post">
                     EXTENSION:
                     <select id="dropdown2" name="dropdown">
-                        <option value="NONE" selected>NONE</option>
-                        <option value="1 HOUR">1 HOUR</option>
-                        <option value="2 HOURS">2 HOURS</option>
-                        <option value="3 HOURS">3 HOURS</option>
+                        <option value="0" selected>NONE</option>
+                        <option value="1">1 HOUR</option>
+                        <option value="2">2 HOURS</option>
+                        <option value="3">3 HOURS</option>
                     </select>
                 </form>
+                </div>
+                <div id="infos">
+                    <span class="infos">NUMBER OF GUESTS: </span><input type="number" id="numOfGuest" min="1" max="6" value="2" required>
+                </div>
+                <br>
                 <input type="checkbox" class="checkbox" id="termsCheckbox"> I agree to the <a class="tac">terms and
                     condition</a> by checking this and confirming my reservation.
                 <div id="terms-popup" class="popup">
@@ -367,8 +369,13 @@
         </div>
     </div>
 
+    
+    <div id="loadingScreen" class="loading-screen">
+        <div class="spinner"></div>
+    </div>
+
     <footer>
-        &copy;2024 CHRISTIAN LUIS ACERON
+        &copy;2024
     </footer>
 
     <script type="module" src="js/savingReservation.js"></script>
