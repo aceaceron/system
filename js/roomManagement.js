@@ -1,4 +1,4 @@
-import { saveCheckInCheckOutData, initializeRoom, saveRoomState } from './dbcommand.js'; // Adjust the path accordingly
+import { saveCheckInData, initializeRoom, saveRoomState } from './dbcommand.js'; // Adjust the path accordingly
 
 document.getElementById('yesBtn').addEventListener('click', function() {
     document.getElementById('paymentConfirmationChkbox').checked = false;
@@ -11,6 +11,7 @@ document.getElementById('yesBtn').addEventListener('click', function() {
         const checkInTime = document.getElementById('ConfirmationCheckInTime').textContent.split(': ')[1];
         const checkOutDate = document.getElementById('ConfirmationCheckOutDate').textContent.split(': ')[1];
         const checkOutTime = document.getElementById('ConfirmationCheckOutTime').textContent.split(': ')[1];
+        const extension = 0;
         const totalDuration = duration;
         console.log('Total Duration:', totalDuration, 'Type:', typeof totalDuration);
 
@@ -25,7 +26,7 @@ document.getElementById('yesBtn').addEventListener('click', function() {
             roomButton.style.color = 'white';
 
             // Save data
-            saveCheckInCheckOutData(roomNum, duration, checkInDate, checkInTime, checkOutDate, checkOutTime, totalDuration, numberOfGuests, totalAmountPaid);
+            saveCheckInData(roomNum, duration, checkInDate, checkInTime, checkOutDate, checkOutTime, extension, totalDuration, numberOfGuests, totalAmountPaid);
 
             // Save room state to Firebase
             saveRoomState(roomNum, false);
@@ -45,6 +46,7 @@ document.getElementById('yesBtn').addEventListener('click', function() {
                 document.getElementById('slidingPanelNonAirconAvail').classList.remove('show');
             }
             fetchRoomData(roomNum);
+            
         }
     }
 });
